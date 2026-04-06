@@ -1,157 +1,162 @@
         // Main customization entrypoint for this template.
         const siteConfig = {
             brand: {
-                mark: "PRJ",
-                title: "Micro-Dual-Net",
-                subtitle: "A reusable single-page research website scaffold inspired by the MAGNet project layout."
+                mark: "MDN",
+                title: "Micro-DualNet",
+                subtitle: "Dual-Path Spatio–Temporal Network for Micro-Action Recognition"
             },
             hero: {
-                badge: "Research Project Website Template",
-                title: "Micro-Dual-Net",
-                tagline: "Use this area for the one-sentence explanation that tells visitors what your project does and why it matters.",
+                badge: "FG 2026",
+                title: "Micro-DualNet: Dual-Path Spatio–Temporal Network for Micro-Action Recognition",
+                tagline: "A keypoint-guided dual-path network that processes anatomically-grounded body entities through parallel Spatial-Temporal and Temporal-Spatial pathways, enabling flexible per-entity processing for fine-grained micro-action recognition.",
                 authors: [
-                    { name: "Author One", url: "#", markers: ["*"] },
-                    { name: "Author Two", url: "#", markers: ["*", "1"] },
-                    { name: "Author Three", url: "#", markers: ["2"] },
-                    { name: "Author Four", url: "#", markers: ["1"] }
+                    { name: "Naga VS Raviteja Chappa", url: "#", markers: ["1"] },
+                    { name: "Evangelos Sariyanidi", url: "#", markers: ["1"] },
+                    { name: "Lisa Yankowitz", url: "#", markers: ["1"] },
+                    { name: "Gokul Nair", url: "#", markers: ["1"] },
+                    { name: "Casey J. Zampella", url: "#", markers: ["1", "2"] },
+                    { name: "Robert T. Schultz", url: "#", markers: ["1", "2"] },
+                    { name: "Birkan Tunç", url: "#", markers: ["1", "2"] }
                 ],
                 affiliations: [
-                    { label: "Institution One", markers: ["1"] },
-                    { label: "Institution Two", markers: ["2"] }
+                    { label: "The Children's Hospital of Philadelphia, USA", markers: ["1"] },
+                    { label: "Perelman School of Medicine, University of Pennsylvania, USA", markers: ["2"] }
                 ],
-                contributionNote: "* Equal contribution",
+                contributionNote: "",
                 links: {
                     paper: "#",
                     code: "#"
                 },
                 stats: [
-                    { value: "01", label: "Replace with your key benchmark or result" },
-                    { value: "02", label: "Replace with your headline capability" },
-                    { value: "03", label: "Replace with your deployment or scale metric" }
+                    { value: "65.10%", label: "Top-1 Accuracy on MA-52" },
+                    { value: "76.88%", label: "Top-1 Accuracy on iMiGUE (state-of-the-art)" },
+                    { value: "290", label: "Individuals in clinical validation study" }
                 ],
-                cardLabel: "Project snapshot",
-                cardCopy: "Replace this panel with a diagram, cover image, or branding mark once your assets are ready."
+                cardLabel: "FG 2026",
+                cardCopy: "Micro-DualNet — Dual-Path Spatio–Temporal Network for Micro-Action Recognition. Children's Hospital of Philadelphia & University of Pennsylvania."
             },
             teaser: {
-                description: "A strong teaser makes the rest of the page easier to scan. Swap in a hosted mp4, a YouTube embed, or a hero image.",
+                description: "Overview of the Micro-DualNet framework showing dual ST and TS pathways with entity-level adaptive routing.",
                 video: "",
                 iframe: "",
                 image: "",
                 poster: ""
             },
             abstract: [
-                "Use this backbone to tell a clear story about your project: the problem, what makes your method different, and the most important outcomes. The original MAGNet page succeeds because it organizes a dense technical story into sections that are easy to browse.",
-                "This template keeps that same rhythm while removing the hard-coded content. You can fill in your own project summary, media, benchmarks, and diagrams without having to rebuild the site structure from scratch."
+                "Micro-actions are subtle, localized movements lasting 1–3 seconds such as scratching one's head or tapping fingers. Such subtle actions are essential for social communication, ubiquitously used in natural interactions, and thus critical for fine-grained video understanding, yet remain poorly understood by current computer vision systems. We identify a fundamental challenge: micro-actions exhibit diverse spatio-temporal characteristics where some are defined by spatial configurations (e.g., \"covering face\") while others manifest through temporal dynamics (e.g., \"leg shaking\"). Existing methods that commit to a single spatio-temporal decomposition cannot accommodate this diversity.",
+                "We propose Micro-DualNet, a dual-path network that processes anatomically-grounded spatial entities through parallel Spatial-Temporal (ST) and Temporal-Spatial (TS) pathways. The ST path captures spatial configurations before modeling temporal dynamics, while the TS path inverts this order to prioritize temporal dynamics. Rather than fixed fusion, we introduce entity-level adaptive routing where each body part learns its optimal processing preference, complemented by Mutual Action Consistency (MAC) loss that enforces cross-path coherence. Extensive experiments demonstrate competitive performance on MA-52 (65.10% Top-1, 68.72% F1mean) and state-of-the-art results on iMiGUE (76.88% Top-1). Clinical validation on an in-house dataset of 290 individuals demonstrates that Micro-DualNet-detected micro-actions reveal statistically significant behavioral differences between kids with autism spectrum disorder, other psychiatric conditions, or typical development."
             ],
             highlights: [
-                "Replace this highlight with your main contribution.",
-                "Use the second highlight for a standout capability or benchmark result.",
-                "Use the third highlight for scale, robustness, or deployment context."
+                "First dual-path architecture with entity-level adaptive routing — each body part independently learns its optimal ST vs TS processing blend.",
+                "State-of-the-art on iMiGUE (76.88% Top-1, +12.50% over PoseConv3D) and competitive on MA-52 (65.10% Top-1, 68.72% F1mean).",
+                "Mutual Action Consistency (MAC) loss enforces cross-path temporal coherence, contributing +2.96% on MA-52 and +4.23% on iMiGUE.",
+                "Clinical validation on 290 individuals reveals statistically significant behavioral differences across ASD, psychiatric, and typically-developing groups."
             ],
             capabilities: [
                 {
-                    title: "Capability One",
-                    chip: "Prediction",
-                    description: "Describe the first mode of your model or system. This card is meant to feel like the MAGNet capability panels, but it is generic enough for any project.",
+                    title: "MA-52 Benchmark",
+                    chip: "Full-Body",
+                    description: "MA-52 is a large-scale micro-action dataset of 22,422 samples collected from psychological interviews, covering 52 action-level categories across 7 body-level groups. Micro-DualNet achieves 65.10% Top-1 and 68.72% F1mean, outperforming MANet by 3.13% F1mean using adaptive keypoint-guided entity extraction instead of fixed body regions.",
                     samples: [
-                        { label: "Sample A", note: "Swap in a video, gif, or poster image.", video: "", image: "" },
-                        { label: "Sample B", note: "Add a short caption for what the viewer should notice.", video: "", image: "" },
-                        { label: "Sample C", note: "You can point each sample to different hosted assets.", video: "", image: "" }
+                        { label: "Position-based", note: "Actions like 'covering face' are characterized by final spatial configurations — the ST path excels here.", video: "", image: "" },
+                        { label: "Motion-based", note: "Actions like 'leg shaking' are defined by repetitive temporal patterns — the TS path excels here.", video: "", image: "" },
+                        { label: "Dual-path", note: "Entity-level adaptive routing learns the optimal ST/TS blend per body part, yielding +9.99% over single-path baselines.", video: "", image: "" }
                     ]
                 },
                 {
-                    title: "Capability Two",
-                    chip: "Generation",
-                    description: "Use this second card for a different task setting, a new dataset, or a more interactive application scenario.",
+                    title: "iMiGUE Benchmark",
+                    chip: "Upper-Body",
+                    description: "iMiGUE focuses on 32 upper-body micro-gesture categories collected from sports interviews (12,899 train / 4,562 test samples). Using K=5 entities (excluding lower body for seated subjects), Micro-DualNet achieves state-of-the-art 76.88% Top-1 accuracy, surpassing PoseConv3D by 12.50% and demonstrating that adaptive entity extraction particularly benefits concentrated upper-body gestures.",
                     samples: [
-                        { label: "Variant A", note: "Keep the sample strip if you want multiple examples.", video: "", image: "" },
-                        { label: "Variant B", note: "Or remove extra items and keep one hero panel.", video: "", image: "" },
-                        { label: "Variant C", note: "The layout still holds up with text-only placeholders.", video: "", image: "" }
+                        { label: "Pose + RGB", note: "Full model fusing keypoint-guided entities with global CNN features: 76.88% Top-1.", video: "", image: "" },
+                        { label: "RGB Only", note: "Entity-aware RGB-only variant: 71.54% Top-1, outperforming all prior skeleton-based methods.", video: "", image: "" },
+                        { label: "Pose Only", note: "Skeleton-only variant: 68.92% Top-1, surpassing all pure skeleton baselines.", video: "", image: "" }
                     ]
                 },
                 {
-                    title: "Capability Three",
-                    chip: "Control",
-                    description: "This is a good place for editing, conditioning, planning, or long-context abilities if that is central to your work.",
+                    title: "Clinical Validation",
+                    chip: "Healthcare",
+                    description: "Micro-DualNet was applied to an in-house dataset of 290 individuals (ages 5–52) recorded during 2–3 minute conversations. Participants were classified into ASD (n=120), non-autistic psychiatric (PSY, n=46), and typically developing (TDC, n=124) groups. Pairwise hurdle analysis revealed statistically significant behavioral differences in micro-action engagement and intensity across groups.",
                     samples: [
-                        { label: "Control 1", note: "Use the active sample area for your strongest qualitative example.", video: "", image: "" },
-                        { label: "Control 2", note: "The other samples can act like a gallery of supporting cases.", video: "", image: "" }
+                        { label: "ASD vs PSY", note: "PSY showed elevated 'retracting feet' intensity (p<0.001) and lower 'turning head' intensity (p<0.05) vs ASD.", video: "", image: "" },
+                        { label: "ASD vs TDC", note: "ASD showed higher 'head up' probability and lower 'stretching feet' probability than TDC (p<0.01).", video: "", image: "" },
+                        { label: "PSY vs TDC", note: "PSY showed elevated 'retracting feet' intensity compared to TDC (p<0.01), aligning with established phenotypes.", video: "", image: "" }
                     ]
                 }
             ],
             method: [
                 {
                     step: "Step 01",
-                    title: "Input Representation",
-                    copy: "Summarize the data or prompt format your system expects. Add one or two lines on preprocessing, tokenization, or scene formatting.",
-                    tokens: ["input", "prompt", "scene", "state"]
+                    title: "Spatial Entity Module (SEM)",
+                    copy: "ResNet-101 with TSM extracts per-frame CNN features. 25 OpenPose keypoints define K anatomically-grounded bounding boxes (head, face, left hand, right hand, torso, lower body) computed dynamically per frame. ROIAlign extracts fixed-size entity features, refined by depthwise separable convolutions to D=256 dimensions with learnable position embeddings.",
+                    tokens: ["ResNet-101", "TSM", "OpenPose", "ROIAlign", "K=6 entities"]
                 },
                 {
                     step: "Step 02",
-                    title: "Core Model",
-                    copy: "Describe your backbone model, the key architectural choice, or the training objective that most differentiates your system.",
-                    tokens: ["encoder", "transformer", "diffusion", "policy"]
+                    title: "ST Path — Spatial then Temporal",
+                    copy: "The Spatial-Temporal path first applies a Spatial Transformer across the K entities within each frame (capturing inter-entity spatial configurations), then applies a Temporal Transformer across T frames per entity (capturing how those configurations evolve over time). Residual MLP connections preserve original entity features.",
+                    tokens: ["Spatial-T", "Temporal-T", "spatial config", "temporal evolution"]
                 },
                 {
                     step: "Step 03",
-                    title: "Conditioning Logic",
-                    copy: "Use this card for memory, retrieval, conditioning signals, interaction modules, or any control structure that matters.",
-                    tokens: ["context", "memory", "retrieval", "constraints"]
+                    title: "TS Path — Temporal then Spatial",
+                    copy: "The Temporal-Spatial path inverts the processing order: a Temporal Transformer first captures motion dynamics per entity across frames, then a Spatial Transformer models the resulting spatial relationships. This order prioritizes rhythm and motion patterns over static pose configurations.",
+                    tokens: ["Temporal-T", "Spatial-T", "motion dynamics", "rhythm patterns"]
                 },
                 {
                     step: "Step 04",
-                    title: "Outputs",
-                    copy: "Close the pipeline with predictions, generations, actions, trajectories, or another outcome layer users can understand quickly.",
-                    tokens: ["output", "metrics", "render", "deploy"]
+                    title: "Adaptive Routing + MAC Loss",
+                    copy: "Entity-level adaptive routing learns per-entity softmax weights over ST and TS outputs, fusing them based on each body part's spatio-temporal characteristics. Mutual Action Consistency (MAC) loss applies entity-aware contrastive learning between paths before routing, enforcing temporal coherence while preserving complementary specialization. Final features combine fused entity representations with global CNN features for classification.",
+                    tokens: ["routing weights", "MAC loss", "contrastive", "classification"]
                 }
             ],
             scheduleModes: [
                 {
-                    label: "Joint Forecasting",
-                    description: "All future steps are denoised together, which helps show coordinated behavior across the full horizon.",
-                    formula: "p(x[t:T] | x[0:t-1], c)",
+                    label: "ST Path",
+                    description: "The Spatial-Temporal path first models spatial entity configurations within each frame, then captures how those configurations evolve across time. Position-defined micro-actions like 'covering face' benefit most from this processing order.",
+                    formula: "ST: Spatial-T(X) → Temporal-T(X_spatial)",
                     cleanPattern: [4, 5, 6, 7, 8, 9, 10, 11]
                 },
                 {
-                    label: "Inpainting",
-                    description: "Only the missing span is denoised while observed context remains fixed on both sides.",
-                    formula: "p(x[missing] | x[left], x[right], c)",
+                    label: "TS Path",
+                    description: "The Temporal-Spatial path first extracts per-entity temporal dynamics across frames, then models the spatial relationships between those motion patterns. Motion-defined micro-actions like 'leg shaking' benefit most from this processing order.",
+                    formula: "TS: Temporal-T(X) → Spatial-T(X_temporal)",
                     cleanPattern: [5, 6, 7, 8]
                 },
                 {
-                    label: "Agentic",
-                    description: "One step becomes clean at a time, which is useful for reactive or sequential decision settings.",
-                    formula: "p(x[t] | x[0:t-1], a[t-1], c)",
+                    label: "Dual Path",
+                    description: "Entity-level adaptive routing blends ST and TS representations with learned per-entity weights. Each body part independently selects its optimal processing preference, consistently outperforming either single path alone (+9.99% over single-path).",
+                    formula: "X_fused = α_ST · X_ST + α_TS · X_TS",
                     cleanPattern: [4, 5, 6, 7, 8, 9]
                 }
             ],
             comparisons: [
                 {
-                    title: "Baseline A vs Your Method",
-                    description: "Use this slot for the most important side-by-side comparison on your page.",
-                    leftLabel: "Baseline",
-                    rightLabel: "Ours",
-                    leftMedia: { video: "", image: "", caption: "Replace with baseline media." },
-                    rightMedia: { video: "", image: "", caption: "Replace with your method media." }
+                    title: "MANet (Fixed Regions) vs Micro-DualNet",
+                    description: "MANet uses predefined fixed body regions that misalign under viewpoint changes. Micro-DualNet's adaptive keypoint-guided entity extraction dynamically adjusts bounding boxes per frame, improving F1mean by 3.13% on MA-52.",
+                    leftLabel: "MANet",
+                    rightLabel: "Micro-DualNet",
+                    leftMedia: { video: "", image: "", caption: "MANet: 65.59% F1mean on MA-52 using fixed spatial regions." },
+                    rightMedia: { video: "", image: "", caption: "Micro-DualNet: 68.72% F1mean on MA-52 with adaptive keypoint-guided entities." }
                 },
                 {
-                    title: "Ablation vs Full Model",
-                    description: "A second comparison can show why a modeling choice matters or how qualitative behavior changes.",
-                    leftLabel: "Ablation",
-                    rightLabel: "Full Model",
-                    leftMedia: { video: "", image: "", caption: "Swap in ablation results." },
-                    rightMedia: { video: "", image: "", caption: "Swap in final model results." }
+                    title: "Single-Path vs Dual-Path Processing",
+                    description: "ST-only and TS-only paths show complementary failure modes: ST excels on position-defined actions, TS on motion-defined ones. The dual-path architecture with entity routing achieves +9.99% over single path, with the largest gains (+31%) on hard action categories.",
+                    leftLabel: "Single Path (ST or TS)",
+                    rightLabel: "Dual Path (Ours)",
+                    leftMedia: { video: "", image: "", caption: "Single-path baseline: 62.14% Top-1 on MA-52." },
+                    rightMedia: { video: "", image: "", caption: "Dual-path with routing + MAC: 65.10% Top-1 on MA-52 (+31% on hard categories)." }
                 }
             ],
             resultSection: {
-                title: "Long-Horizon Results",
-                copy: "Use the final section to showcase the output that best sells your project: ultra-long sequences, realistic rollouts, a deployed system, or a polished demo. This is where visitors should leave with a concrete feeling for what your project can do.",
+                title: "Clinical Validation",
+                copy: "Beyond benchmark performance, Micro-DualNet was validated on an in-house dataset of 290 individuals (ages 5–52) recorded during 2–3 minute naturalistic conversations. Participants included children and adults with autism spectrum disorder (ASD, n=120), non-autistic psychiatric conditions (PSY, n=46), and typically developing controls (TDC, n=124). For the ten most frequent micro-actions, pairwise hurdle analysis tested both engagement probability (logistic GLM) and intensity among engagers (fractional logit). Results reveal statistically significant behavioral differences across groups — including elevated 'retracting feet' intensity in PSY vs both ASD and TDC (p<0.001), and increased 'shaking legs' probability in ASD vs PSY — providing initial evidence that automated micro-action detection can support scalable behavioral assessment in clinical settings.",
                 video: "",
                 image: "",
                 metrics: [
-                    { title: "Duration", copy: "Highlight how long your method remains stable, useful, or realistic." },
-                    { title: "Consistency", copy: "Call out what remains coherent over time or across interacting entities." },
-                    { title: "Takeaway", copy: "End with the one sentence you want people to remember." }
+                    { title: "290 Individuals", copy: "Ages 5–52 across ASD (n=120), PSY (n=46), and TDC (n=124) diagnostic groups." },
+                    { title: "Significant Differences", copy: "10 micro-actions tested; multiple statistically significant pairwise group differences identified (p<0.05)." },
+                    { title: "Clinical Potential", copy: "Automated micro-action detection may support scalable behavioral assessment and complement manual clinical coding workflows." }
                 ]
             }
         };
