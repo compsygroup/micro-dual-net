@@ -163,9 +163,13 @@
         }
 
         .topbar {
+            position: fixed;
+            top: 0.9rem;
+            right: 1.2rem;
+            z-index: 46;
             display: flex;
+            align-items: center;
             justify-content: flex-end;
-            margin-bottom: 0.4rem;
         }
 
         .theme-toggle {
@@ -240,10 +244,11 @@
         }
 
         .hero {
-            padding: 2rem 0 3rem;
+            min-height: calc(100svh - 1.6rem);
+            padding: 4vh 0 3rem;
             display: grid;
+            align-content: center;
             gap: 1.5rem;
-            animation: fadeUp 0.85s ease both;
         }
 
         .hero-badge {
@@ -296,6 +301,9 @@
             border: 0;
             box-shadow: none;
             backdrop-filter: none;
+            display: grid;
+            justify-items: center;
+            align-content: center;
             text-align: center;
             max-width: 1100px;
             margin: 0 auto;
@@ -312,6 +320,7 @@
             margin: 0 auto 1.1rem;
             max-width: 18ch;
             text-wrap: balance;
+            will-change: transform, opacity, filter;
         }
 
         .hero-copy .tagline {
@@ -686,7 +695,7 @@
         }
 
         html[data-theme="dark"] .section-title-icon {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(157, 185, 223, 0.08) 100%);
+            background: #212d40;
             border-color: rgba(181, 202, 230, 0.12);
             color: var(--accent-strong);
         }
@@ -699,6 +708,12 @@
         .panel {
             padding: 1.6rem;
             background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 28%);
+        }
+
+        html[data-theme="dark"] .panel {
+            background-image: none;
+            background-color: rgba(20, 28, 42, 0.96);
+            border-color: rgba(255, 255, 255, 0.08);
         }
 
         .template-banner {
@@ -1078,10 +1093,21 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
+        html[data-theme="dark"] .strip-nav {
+            background: #243249;
+            border-color: rgba(255, 255, 255, 0.08);
+            color: #eef5ff;
+        }
+
         .strip-nav:hover {
             transform: translateY(-2px);
             border-color: rgba(24, 89, 209, 0.2);
             box-shadow: var(--shadow-soft);
+        }
+
+        html[data-theme="dark"] .strip-nav:hover {
+            border-color: rgba(143, 175, 215, 0.24);
+            background: #2a3a55;
         }
 
         .method-grid {
@@ -2086,8 +2112,9 @@
         }
 
         html[data-theme="dark"] .schedule-tab.active {
-            background: linear-gradient(135deg, #79afff 0%, #5f96ea 42%, #95c2ff 100%);
-            color: #11203a;
+            background: #86b8ff;
+            color: #10203b;
+            box-shadow: 0 10px 24px rgba(95, 150, 234, 0.22);
         }
 
         .schedule-layout {
@@ -2128,7 +2155,7 @@
         }
 
         html[data-theme="dark"] .schedule-note {
-            background: linear-gradient(180deg, #1d2740 0%, #22324d 58%, #2e466d 100%);
+            background: #1f2b40;
             color: rgba(255, 255, 255, 0.9);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
@@ -2152,10 +2179,7 @@
         }
 
         html[data-theme="dark"] .schedule-viz {
-            background:
-                radial-gradient(circle at 10% 10%, rgba(143, 175, 215, 0.08), transparent 20%),
-                radial-gradient(circle at 88% 18%, rgba(181, 202, 230, 0.1), transparent 24%),
-                linear-gradient(180deg, #182130 0%, #223046 100%);
+            background: #1a2435;
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 

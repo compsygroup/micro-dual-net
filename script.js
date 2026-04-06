@@ -506,6 +506,36 @@
             });
         }
 
+        function initHeroEntrance() {
+            const title = document.getElementById("heroTitle");
+            const tagline = document.getElementById("heroTagline");
+            const meta = document.querySelector(".hero-meta");
+            const actions = document.querySelector(".hero-actions");
+            const stats = document.getElementById("heroStats");
+
+            if (!title) {
+                return;
+            }
+
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            if (!window.gsap || prefersReducedMotion) {
+                return;
+            }
+
+            const entranceTargets = [title, tagline, meta, actions, stats].filter(Boolean);
+            window.gsap.set(entranceTargets, { autoAlpha: 0, y: 26 });
+
+            const intro = window.gsap.timeline({ defaults: { ease: "power3.out" } });
+            intro.to(title, { autoAlpha: 1, y: 0, duration: 1.08 });
+            intro.to([tagline, meta, actions, stats].filter(Boolean), {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.82,
+                stagger: 0.08
+            }, "-=0.62");
+        }
+
         function initTeaser() {
             renderMedia(
                 document.getElementById("teaserMedia"),
@@ -1004,6 +1034,7 @@
         function init() {
             initTheme();
             initHero();
+            initHeroEntrance();
             initUIIcons();
             initTeaser();
             initAbstract();
