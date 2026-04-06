@@ -694,14 +694,14 @@
                 "<span class='mdn-entity-chip " + e.cls + "'>" + e.label + "</span>"
             ).join("");
 
-            const routingRows = scheduleRows.map(function(row) {
+            const routingRows = scheduleRows.map(function(row, i) {
                 const stPct = Math.round(row.stWeight * 100);
                 const tsPct = 100 - stPct;
                 return "<div class='mdn-routing-row'>" +
                     "<span class='mdn-routing-label'>" + row.label + "</span>" +
                     "<div class='mdn-routing-bar'>" +
-                        "<div class='mdn-routing-st' style='width:" + stPct + "%' title='ST " + stPct + "%'></div>" +
-                        "<div class='mdn-routing-ts' style='width:" + tsPct + "%' title='TS " + tsPct + "%'></div>" +
+                        "<div class='mdn-routing-st' style='width:" + stPct + "%;--row-index:" + i + "' title='ST " + stPct + "%'></div>" +
+                        "<div class='mdn-routing-ts' style='width:" + tsPct + "%;--row-index:" + i + "' title='TS " + tsPct + "%'></div>" +
                     "</div>" +
                 "</div>";
             }).join("");
@@ -878,7 +878,10 @@
 
             // Routing legend — shown only in Dual Path tab
             let routingLegend = document.getElementById("routingLegend");
-            if (state.scheduleModeIndex === 2) {
+            const isNewDualTab = state.scheduleModeIndex === 2;
+            const wasAlreadyDual = routingLegend !== null;
+            if (isNewDualTab) {
+                const isFirstRender = !wasAlreadyDual;
                 if (!routingLegend) {
                     routingLegend = document.createElement("div");
                     routingLegend.id = "routingLegend";
@@ -886,16 +889,17 @@
                     rows.parentNode.insertBefore(routingLegend, rows.nextSibling);
                 }
                 routingLegend.innerHTML = "<div class='routing-legend-title'>Learned Routing Weights per Entity</div>" +
-                    scheduleRows.map(function(row) {
+                    scheduleRows.map(function(row, i) {
                         const stPct = Math.round(row.stWeight * 100);
                         const tsPct = Math.round(row.tsWeight * 100);
+                        const animClass = isFirstRender ? " animating" : "";
                         return "<div class='routing-legend-row'>" +
                             "<span class='routing-entity-label'>" + row.label + "</span>" +
                             "<div class='routing-bar-wrap'>" +
-                                "<div class='routing-bar-st' style='width:" + stPct + "%'>" +
+                                "<div class='routing-bar-st" + animClass + "' style='width:" + stPct + "%;--bar-index:" + i + "'>" +
                                     (stPct > 18 ? "&alpha;<sub>ST</sub> " + stPct + "%" : "") +
                                 "</div>" +
-                                "<div class='routing-bar-ts' style='width:" + tsPct + "%'>" +
+                                "<div class='routing-bar-ts" + animClass + "' style='width:" + tsPct + "%;--bar-index:" + i + "'>" +
                                     (tsPct > 18 ? "&alpha;<sub>TS</sub> " + tsPct + "%" : "") +
                                 "</div>" +
                             "</div>" +
@@ -1022,6 +1026,22 @@
             initSchedule();
             initComparisons();
             initResults();
+
+            // Activate method pipeline shell on scroll-in (triggers stagger + bar-fill animations)
+            const pipelineShell = document.querySelector(".method-pipeline-shell");
+            if (pipelineShell && "IntersectionObserver" in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            pipelineShell.classList.add("is-active");
+                            observer.disconnect();
+                        }
+                    });
+                }, { threshold: 0.15 });
+                observer.observe(pipelineShell);
+            } else if (pipelineShell) {
+                pipelineShell.classList.add("is-active");
+            }
         }
 
         init();
