@@ -369,7 +369,6 @@
             const root = document.documentElement;
             const metaTheme = document.querySelector('meta[name="theme-color"]');
             const toggle = document.getElementById("themeToggle");
-            const label = document.getElementById("themeToggleLabel");
             const nextTheme = theme === "dark" ? "dark" : "light";
 
             root.dataset.theme = nextTheme;
@@ -380,10 +379,7 @@
 
             if (toggle) {
                 toggle.setAttribute("aria-pressed", String(nextTheme === "dark"));
-            }
-
-            if (label) {
-                label.textContent = nextTheme === "dark" ? "Dark" : "Light";
+                toggle.setAttribute("aria-label", nextTheme === "dark" ? "Switch to light mode" : "Switch to dark mode");
             }
 
             try {
@@ -463,11 +459,6 @@
                 "content",
                 siteConfig.hero.tagline || "Reusable research project website backbone."
             );
-            const brandMark = document.getElementById("brandMark");
-            brandMark.innerHTML = iconMarkup("atom", "ui-icon brand-mark-icon") + "<span class='brand-mark-text'></span>";
-            brandMark.querySelector(".brand-mark-text").textContent = siteConfig.brand.mark;
-            setText("brandTitle", siteConfig.brand.title);
-            setText("brandSubtitle", siteConfig.brand.subtitle);
             setText("heroTitle", siteConfig.hero.title);
             setText("heroTagline", siteConfig.hero.tagline);
             document.getElementById("authorList").innerHTML = renderInlineMarkedList(siteConfig.hero.authors, "author-entry");
@@ -630,7 +621,7 @@
         }
 
         function initUIIcons() {
-            const navIcons = {
+            const sectionIcons = {
                 overview: "overview",
                 teaser: "teaser",
                 abstract: "abstract",
@@ -641,24 +632,12 @@
                 results: "results"
             };
 
-            document.querySelectorAll(".nav-item").forEach((item) => {
-                const target = (item.getAttribute("href") || "").replace("#", "");
-                const dot = item.querySelector(".nav-dot");
-                const label = item.querySelector("span:last-child");
-                if (dot) {
-                    dot.innerHTML = iconMarkup(navIcons[target], "ui-icon nav-dot-icon");
-                }
-                if (label) {
-                    label.classList.add("nav-label");
-                }
-            });
-
             document.querySelectorAll("main section[id]").forEach((section) => {
                 const heading = section.querySelector(".section-head h3");
                 if (!heading) {
                     return;
                 }
-                const iconName = navIcons[section.id] || "overview";
+                const iconName = sectionIcons[section.id] || "overview";
                 const text = heading.textContent;
                 heading.classList.add("section-title");
                 heading.innerHTML = iconMarkup(iconName, "ui-icon section-title-icon") + "<span>" + text + "</span>";
@@ -729,9 +708,13 @@
                                 <div class="method-flow-stage encoding">
                                     <div class="method-stage-kicker">Encoding</div>
                                     <div class="method-vq-block encoder">
-                                        <strong>VQ-VAE</strong>
-                                        <span>Encoder</span>
-                                        <div class="method-vq-bars"><span></span><span></span><span></span><span></span></div>
+                                        <span class="method-vq-edge" aria-hidden="true"></span>
+                                        <div class="method-vq-core">
+                                            <strong>VQ-VAE</strong>
+                                            <span>Encoder</span>
+                                            <div class="method-vq-bars"><span></span><span></span><span></span><span></span></div>
+                                            <div class="method-vq-mini-flow" aria-hidden="true"><span></span><span></span><span></span></div>
+                                        </div>
                                     </div>
                                     <div class="method-context-row">
                                         <span class="method-context-badge pink">beta</span>
@@ -807,9 +790,13 @@
                                 <div class="method-flow-stage decoding">
                                     <div class="method-stage-kicker">Decoding</div>
                                     <div class="method-vq-block decoder">
-                                        <strong>VQ-VAE</strong>
-                                        <span>Decoder</span>
-                                        <div class="method-vq-bars"><span></span><span></span><span></span><span></span></div>
+                                        <span class="method-vq-edge" aria-hidden="true"></span>
+                                        <div class="method-vq-core">
+                                            <strong>VQ-VAE</strong>
+                                            <span>Decoder</span>
+                                            <div class="method-vq-bars"><span></span><span></span><span></span><span></span></div>
+                                            <div class="method-vq-mini-flow" aria-hidden="true"><span></span><span></span><span></span></div>
+                                        </div>
                                     </div>
                                     <div class="method-context-row">
                                         <span class="method-context-badge pink">beta</span>
@@ -1013,24 +1000,6 @@
             });
         }
 
-        function initScrollSpy() {
-            const sections = document.querySelectorAll("main section[id]");
-            const navItems = document.querySelectorAll(".nav-item");
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (!entry.isIntersecting) {
-                        return;
-                    }
-                    navItems.forEach((item) => {
-                        item.classList.toggle("active", item.getAttribute("href") === "#" + entry.target.id);
-                    });
-                });
-            }, { rootMargin: "-35% 0px -45% 0px", threshold: 0.1 });
-
-            sections.forEach((section) => observer.observe(section));
-        }
-
         function init() {
             initTheme();
             initHero();
@@ -1042,7 +1011,6 @@
             initSchedule();
             initComparisons();
             initResults();
-            initScrollSpy();
         }
 
         init();
