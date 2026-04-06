@@ -3,17 +3,21 @@
             brand: {
                 mark: "MDN",
                 title: "Micro-DualNet",
-                subtitle: "Dual-Path Spatio–Temporal Network for Micro-Action Recognition"
+                subtitle: "Dual‑Path Spatio–Temporal Network for Micro‑Action Recognition"
             },
             hero: {
                 badge: "FG 2026",
-                title: "Micro-DualNet: Dual-Path Spatio–Temporal Network for Micro-Action Recognition",
+                title: "Micro-DualNet: Dual‑Path Spatio–Temporal Network for Micro‑Action Recognition",
+                titleLines: [
+                    "Micro-DualNet: Dual‑Path",
+                    "Spatio–Temporal Network for Micro‑Action Recognition"
+                ],
                 tagline: "A keypoint-guided dual-path network that processes anatomically-grounded body entities through parallel Spatial-Temporal and Temporal-Spatial pathways, enabling flexible per-entity processing for fine-grained micro-action recognition.",
                 authors: [
                     { name: "Naga VS Raviteja Chappa", url: "https://nchappa.github.io", markers: ["1"] },
                     { name: "Evangelos Sariyanidi", url: "https://sariyanidi.com/", markers: ["1"] },
                     { name: "Lisa Yankowitz", url: "#", markers: ["1"] },
-                    { name: "Gokul Nair", url: "#", markers: ["1"] },
+                    { name: "Gokul M. Nair", url: "#", markers: ["1"] },
                     { name: "Casey J. Zampella", url: "#", markers: ["1", "2"] },
                     { name: "Robert T. Schultz", url: "#", markers: ["1", "2"] },
                     { name: "Birkan Tunç", url: "#", markers: ["1", "2"] }
@@ -33,7 +37,7 @@
                     { value: "290", label: "Individuals in clinical validation study" }
                 ],
                 cardLabel: "FG 2026",
-                cardCopy: "Micro-DualNet — Dual-Path Spatio–Temporal Network for Micro-Action Recognition. Children's Hospital of Philadelphia & University of Pennsylvania."
+                cardCopy: "Micro-DualNet — Dual‑Path Spatio–Temporal Network for Micro‑Action Recognition. Children's Hospital of Philadelphia & University of Pennsylvania."
             },
             teaser: {
                 description: "Overview of the Micro-DualNet framework showing dual ST and TS pathways with entity-level adaptive routing.",
@@ -370,6 +374,24 @@
             document.getElementById(id).textContent = value;
         }
 
+        function setHeroTitle() {
+            const title = document.getElementById("heroTitle");
+            const titleLines = Array.isArray(siteConfig.hero.titleLines) ? siteConfig.hero.titleLines.filter(Boolean) : [];
+
+            if (!title) {
+                return;
+            }
+
+            if (titleLines.length > 0) {
+                title.innerHTML = titleLines
+                    .map((line) => "<span class='hero-title-line'>" + escapeHtml(line) + "</span>")
+                    .join("");
+                return;
+            }
+
+            title.textContent = siteConfig.hero.title || "";
+        }
+
         function applyTheme(theme) {
             const root = document.documentElement;
             const metaTheme = document.querySelector('meta[name="theme-color"]');
@@ -465,7 +487,7 @@
                 "content",
                 siteConfig.hero.tagline || "Reusable research project website backbone."
             );
-            setText("heroTitle", siteConfig.hero.title);
+            setHeroTitle();
             setText("heroTagline", siteConfig.hero.tagline);
             document.getElementById("authorList").innerHTML = renderInlineMarkedList(siteConfig.hero.authors, "author-entry");
             document.getElementById("affiliationLine").innerHTML = renderInlineMarkedList(siteConfig.hero.affiliations, "affiliation-entry");
@@ -539,6 +561,149 @@
                 duration: 0.82,
                 stagger: 0.08
             }, "-=0.62");
+        }
+
+        function initScrollMotion() {
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const methodShell = document.querySelector(".method-pipeline-shell");
+
+            if (prefersReducedMotion || !window.gsap) {
+                if (methodShell) {
+                    methodShell.classList.add("is-active");
+                }
+                return;
+            }
+
+            const sections = Array.from(document.querySelectorAll("main .section"));
+            const getSectionTargets = (section) => {
+                const head = section.querySelector(".section-head");
+                let contentTargets = Array.from(section.children).filter((child) => !child.classList.contains("section-head"));
+
+                if (section.id === "abstract") {
+                    contentTargets = Array.from(section.querySelectorAll(".abstract-grid > *"));
+                } else if (section.id === "capabilities") {
+                    contentTargets = Array.from(section.querySelectorAll("#capabilityGrid > *"));
+                } else if (section.id === "comparisons") {
+                    contentTargets = Array.from(section.querySelectorAll("#comparisonGrid > *"));
+                } else if (section.id === "results") {
+                    contentTargets = Array.from(section.querySelectorAll(".longform-card"));
+                }
+
+                return [head, ...contentTargets].filter(Boolean);
+            };
+
+            sections.forEach((section) => {
+                const targets = getSectionTargets(section);
+                if (targets.length) {
+                    window.gsap.set(targets, { autoAlpha: 0, y: 34 });
+                }
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    }
+
+                    const section = entry.target;
+                    observer.unobserve(section);
+                    const targets = getSectionTargets(section);
+                    if (!targets.length) {
+                        return;
+                    }
+
+                    const timeline = window.gsap.timeline({ defaults: { ease: "power3.out" } });
+                    timeline.to(targets, {
+                        autoAlpha: 1,
+                        y: 0,
+                        duration: 0.88,
+                        stagger: 0.1,
+                        clearProps: "opacity,transform"
+                    });
+
+                    if (section.id === "method" && methodShell) {
+                        timeline.call(() => {
+                            methodShell.classList.add("is-active");
+                        }, null, 0.26);
+                    }
+                });
+            }, {
+                threshold: 0.18,
+                rootMargin: "0px 0px -10% 0px"
+            });
+
+            sections.forEach((section) => observer.observe(section));
+
+            const parallaxTargets = [
+                { element: document.querySelector(".hero-card"), intensity: 12 },
+                { element: document.querySelector(".teaser .media-shell"), intensity: 8 },
+                { element: document.querySelector(".method-pipeline-board"), intensity: 10 },
+                { element: document.querySelector(".schedule-note"), intensity: 7 },
+                { element: document.querySelector(".schedule-viz"), intensity: 9 }
+            ].filter((item) => item.element).map((item) => ({
+                ...item,
+                setY: window.gsap.quickSetter(item.element, "y", "px")
+            }));
+
+            let ticking = false;
+
+            const updateParallax = () => {
+                const viewportMid = window.innerHeight / 2;
+                parallaxTargets.forEach((item) => {
+                    const rect = item.element.getBoundingClientRect();
+                    const elementMid = rect.top + rect.height / 2;
+                    const distance = (elementMid - viewportMid) / viewportMid;
+                    const clamped = Math.max(-1, Math.min(1, distance));
+                    item.setY(clamped * -item.intensity);
+                });
+                ticking = false;
+            };
+
+            const requestParallaxUpdate = () => {
+                if (ticking) {
+                    return;
+                }
+                ticking = true;
+                window.requestAnimationFrame(updateParallax);
+            };
+
+            updateParallax();
+            window.addEventListener("scroll", requestParallaxUpdate, { passive: true });
+            window.addEventListener("resize", requestParallaxUpdate);
+        }
+
+        function initPremiumHover() {
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const selectors = [
+                ".hero-card",
+                ".panel",
+                ".capability-card",
+                ".comparison-card",
+                ".longform-card",
+                ".method-module-card",
+                ".button",
+                ".theme-toggle",
+                ".capability-chip",
+                ".sample-thumb",
+                ".strip-nav",
+                ".stat",
+                ".schedule-tab",
+                ".method-chip",
+                ".method-context-badge"
+            ];
+
+            document.querySelectorAll(selectors.join(",")).forEach((element) => {
+                if (element.dataset.premiumBound === "true") {
+                    return;
+                }
+
+                element.dataset.premiumBound = "true";
+                element.classList.add("premium-interactive");
+
+                if (prefersReducedMotion) {
+                    return;
+                }
+            });
         }
 
         function initTeaser() {
@@ -702,16 +867,37 @@
             const condStep = steps[2] || { title: "Conditioning Logic", copy: "", tokens: [] };
             const outputStep = steps[3] || { title: "Outputs", copy: "", tokens: [] };
             const chipTones = ["tone-a", "tone-b", "tone-c", "tone-d", "tone-e"];
-            const arrowMarkup = `
-                <div class="method-arrow" aria-hidden="true">
-                    <span class="method-arrow-packet packet-a"></span>
-                    <span class="method-arrow-packet packet-b"></span>
-                    <span class="method-arrow-packet packet-c"></span>
-                </div>
-            `;
             const renderChips = (tokens) => tokens.map((token, index) => {
                 return "<span class='method-chip " + chipTones[index % chipTones.length] + "'>" + token + "</span>";
             }).join("");
+            const escapeAttr = (value) => String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/"/g, "&quot;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+            const connectorDefs = [
+                { d: "M 127 124 C 150 124 163 124 186 124", startX: 127, endX: 186, y: 124, label: "z", tone: "a" },
+                { d: "M 266 124 C 290 124 304 124 328 124", startX: 266, endX: 328, y: 124, label: "q", tone: "b" },
+                { d: "M 407 124 C 431 124 445 124 469 124", startX: 407, endX: 469, y: 124, label: "mix", tone: "c" },
+                { d: "M 548 124 C 572 124 586 124 610 124", startX: 548, endX: 610, y: 124, label: "M0", tone: "a" },
+                { d: "M 689 124 C 713 124 727 124 751 124", startX: 689, endX: 751, y: 124, label: "x*", tone: "b" },
+                { d: "M 830 124 C 854 124 868 124 892 124", startX: 830, endX: 892, y: 124, label: "render", tone: "c" }
+            ];
+            const renderConnectors = () => connectorDefs.map((connector) => `
+                <g class="method-link tone-${connector.tone}">
+                    <path class="method-link-glow" d="${connector.d}"></path>
+                    <path class="method-link-path" d="${connector.d}"></path>
+                    <circle class="method-link-node" cx="${connector.startX}" cy="${connector.y}" r="4"></circle>
+                    <circle class="method-link-node" cx="${connector.endX}" cy="${connector.y}" r="4"></circle>
+                    <text class="method-link-label" x="${(connector.startX + connector.endX) / 2}" y="${connector.y - 12}" text-anchor="middle">${connector.label}</text>
+                </g>
+            `).join("");
+            const renderPackets = () => connectorDefs.map((connector, index) => [0, 1].map((packetIndex) => `
+                <span
+                    class="method-flow-packet tone-${connector.tone} packet-${packetIndex + 1}"
+                    style="--packet-path:path('${connector.d}'); --packet-delay:${(index * 0.34 + packetIndex * 0.88).toFixed(2)}s; --packet-duration:${(4.5 + (index % 3) * 0.24).toFixed(2)}s;"
+                ></span>
+            `).join("")).join("");
 
             methodGrid.innerHTML = `
                 <div class="method-pipeline-shell">
@@ -720,139 +906,199 @@
                     <div class="method-pipeline-scroll">
                         <div class="method-pipeline-board">
                             <div class="method-flow-track">
-                                <div class="method-flow-stage input">
-                                    <div class="method-stage-kicker">Input Motion</div>
-                                    <div class="method-scene-card">
-                                        <div class="method-person agent-a"></div>
-                                        <div class="method-person agent-b"></div>
-                                    </div>
-                                    <div class="method-stage-note">${inputStep.title}</div>
-                                    <div class="method-repr-stack">
-                                        <div class="method-repr-row agent-a">
-                                            <div class="method-repr-agent">A</div>
-                                            <div class="method-repr-tokens">${renderChips(inputStep.tokens)}</div>
-                                        </div>
-                                        <div class="method-repr-row agent-b">
-                                            <div class="method-repr-agent">B</div>
-                                            <div class="method-repr-tokens">${renderChips(inputStep.tokens.slice().reverse())}</div>
-                                        </div>
+                                <div class="method-map-overlay" aria-hidden="true">
+                                    <svg class="method-map-svg" viewBox="0 0 1000 240" preserveAspectRatio="none">
+                                        ${renderConnectors()}
+                                    </svg>
+                                    <div class="method-flow-packets">
+                                        ${renderPackets()}
                                     </div>
                                 </div>
 
-                                ${arrowMarkup}
+                                <div class="method-flow-stage input">
+                                    <div class="method-stage-kicker">Input Motion</div>
+                                    <div
+                                        class="method-module-card"
+                                        tabindex="0"
+                                        data-method-label="Input Motion"
+                                        data-method-meta="Scene Assembly"
+                                        data-method-copy="${escapeAttr(inputStep.copy || "Aggregate prompt state, actor structure, and normalized trajectories before tokenization begins.")}"
+                                    >
+                                        <div class="method-scene-card">
+                                            <div class="method-person agent-a"></div>
+                                            <div class="method-person agent-b"></div>
+                                        </div>
+                                        <div class="method-repr-stack">
+                                            <div class="method-repr-row agent-a">
+                                                <div class="method-repr-agent">A</div>
+                                                <div class="method-repr-tokens">${renderChips(inputStep.tokens)}</div>
+                                            </div>
+                                            <div class="method-repr-row agent-b">
+                                                <div class="method-repr-agent">B</div>
+                                                <div class="method-repr-tokens">${renderChips(inputStep.tokens.slice().reverse())}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="method-stage-note">${inputStep.title}</div>
+                                </div>
 
                                 <div class="method-flow-stage encoding">
                                     <div class="method-stage-kicker">Encoding</div>
-                                    <div class="method-vq-block encoder">
-                                        <span class="method-vq-edge" aria-hidden="true"></span>
-                                        <div class="method-vq-core">
-                                            <strong>VQ-VAE</strong>
-                                            <span>Encoder</span>
-                                            <div class="method-vq-bars"><span></span><span></span><span></span><span></span></div>
-                                            <div class="method-vq-mini-flow" aria-hidden="true"><span></span><span></span><span></span></div>
+                                    <div
+                                        class="method-module-card"
+                                        tabindex="0"
+                                        data-method-label="Vector Quantization"
+                                        data-method-meta="Token Compression"
+                                        data-method-copy="${escapeAttr(modelStep.copy || "Compress structured motion into latent codebooks so the system can operate over discrete, denoisable tokens.")}"
+                                    >
+                                        <div class="method-vq-block encoder">
+                                            <span class="method-vq-edge" aria-hidden="true"></span>
+                                            <div class="method-vq-core">
+                                                <strong>VQ-VAE</strong>
+                                                <span>Encoder</span>
+                                                <div class="method-vq-bars"><span></span><span></span><span></span><span></span></div>
+                                                <div class="method-vq-mini-flow" aria-hidden="true"><span></span><span></span><span></span></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="method-context-row">
-                                        <span class="method-context-badge pink">beta</span>
-                                        <span class="method-context-badge green">delta Tcan</span>
+                                        <div class="method-context-row">
+                                            <span class="method-context-badge pink">beta</span>
+                                            <span class="method-context-badge green">delta Tcan</span>
+                                        </div>
                                     </div>
                                     <div class="method-stage-note">${modelStep.title}</div>
                                 </div>
 
-                                ${arrowMarkup}
-
                                 <div class="method-flow-stage tokens">
                                     <div class="method-stage-kicker">Noisy Tokens</div>
-                                    <div class="method-token-math">
-                                        <div class="method-token-col">
-                                            <div class="method-token-col-label">M<sub>0</sub></div>
-                                            <span class="method-token-square agent-a"></span>
-                                            <span class="method-token-square agent-b"></span>
-                                            <span class="method-token-square agent-a"></span>
-                                            <span class="method-token-square agent-b"></span>
-                                            <span class="method-token-square agent-a"></span>
-                                        </div>
-                                        <div class="method-token-sign">+</div>
-                                        <div class="method-token-col">
-                                            <div class="method-token-col-label">&epsilon;</div>
-                                            <span class="method-token-square noise"></span>
-                                            <span class="method-token-square noise"></span>
-                                            <span class="method-token-square noise"></span>
-                                            <span class="method-token-square noise"></span>
-                                            <span class="method-token-square noise"></span>
-                                        </div>
-                                        <div class="method-token-sign">=</div>
-                                        <div class="method-token-col">
-                                            <div class="method-token-col-label">M&#771;(&tau;)</div>
-                                            <span class="method-token-square mix-a"></span>
-                                            <span class="method-token-square mix-b"></span>
-                                            <span class="method-token-square mix-a"></span>
-                                            <span class="method-token-square mix-b"></span>
-                                            <span class="method-token-square mix-a"></span>
+                                    <div
+                                        class="method-module-card"
+                                        tabindex="0"
+                                        data-method-label="Noisy Token Mixer"
+                                        data-method-meta="Forward Diffusion"
+                                        data-method-copy="${escapeAttr(condStep.copy || "Combine clean motion tokens with stochastic noise and context controls to form the denoising target state.")}"
+                                    >
+                                        <div class="method-token-math">
+                                            <div class="method-token-col">
+                                                <div class="method-token-col-label">M<sub>0</sub></div>
+                                                <span class="method-token-square agent-a"></span>
+                                                <span class="method-token-square agent-b"></span>
+                                                <span class="method-token-square agent-a"></span>
+                                                <span class="method-token-square agent-b"></span>
+                                                <span class="method-token-square agent-a"></span>
+                                            </div>
+                                            <div class="method-token-sign">+</div>
+                                            <div class="method-token-col">
+                                                <div class="method-token-col-label">&epsilon;</div>
+                                                <span class="method-token-square noise"></span>
+                                                <span class="method-token-square noise"></span>
+                                                <span class="method-token-square noise"></span>
+                                                <span class="method-token-square noise"></span>
+                                                <span class="method-token-square noise"></span>
+                                            </div>
+                                            <div class="method-token-sign">=</div>
+                                            <div class="method-token-col">
+                                                <div class="method-token-col-label">M&#771;(&tau;)</div>
+                                                <span class="method-token-square mix-a"></span>
+                                                <span class="method-token-square mix-b"></span>
+                                                <span class="method-token-square mix-a"></span>
+                                                <span class="method-token-square mix-b"></span>
+                                                <span class="method-token-square mix-a"></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="method-stage-note">${condStep.title}</div>
                                 </div>
 
-                                ${arrowMarkup}
-
                                 <div class="method-flow-stage denoiser">
                                     <div class="method-stage-kicker">Denoiser F<sub>&phi;</sub></div>
-                                    <div class="method-denoiser-box">
-                                        <strong>${modelStep.step}</strong>
-                                        <h5>DFoT</h5>
-                                        <p>Diffusion-forcing transformer with iterative coordination.</p>
-                                        <div class="method-denoiser-steps"><span></span><span></span><span></span><span></span><span></span></div>
+                                    <div
+                                        class="method-module-card"
+                                        tabindex="0"
+                                        data-method-label="Diffusion Forcing Transformer"
+                                        data-method-meta="Iterative Coordination"
+                                        data-method-copy="${escapeAttr(modelStep.copy || "Iteratively denoise the shared latent stream while preserving coordination across multiple interacting agents.")}"
+                                    >
+                                        <div class="method-denoiser-box">
+                                            <strong>${modelStep.step}</strong>
+                                            <h5>DFoT</h5>
+                                            <p>Diffusion-forcing transformer with iterative coordination.</p>
+                                            <div class="method-denoiser-steps"><span></span><span></span><span></span><span></span><span></span></div>
+                                        </div>
                                     </div>
-                                    <div class="method-stage-note">${modelStep.copy}</div>
+                                    <div class="method-stage-note">Iterative denoising core</div>
                                 </div>
-
-                                ${arrowMarkup}
 
                                 <div class="method-flow-stage clean">
                                     <div class="method-stage-kicker">M<sub>0</sub></div>
-                                    <div class="method-clean-stack">
-                                        <span class="method-token-square agent-a"></span>
-                                        <span class="method-token-square agent-b"></span>
-                                        <span class="method-token-square agent-a"></span>
-                                        <span class="method-token-square agent-b"></span>
-                                        <span class="method-token-square agent-a"></span>
+                                    <div
+                                        class="method-module-card"
+                                        tabindex="0"
+                                        data-method-label="Recovered Clean Tokens"
+                                        data-method-meta="Latent State"
+                                        data-method-copy="${escapeAttr(outputStep.step || "Recover a clean latent motion sequence that can be decoded into final trajectories and renders.")}"
+                                    >
+                                        <div class="method-clean-stack">
+                                            <span class="method-token-square agent-a"></span>
+                                            <span class="method-token-square agent-b"></span>
+                                            <span class="method-token-square agent-a"></span>
+                                            <span class="method-token-square agent-b"></span>
+                                            <span class="method-token-square agent-a"></span>
+                                        </div>
                                     </div>
                                     <div class="method-stage-note">${outputStep.step}</div>
                                 </div>
 
-                                ${arrowMarkup}
-
                                 <div class="method-flow-stage decoding">
                                     <div class="method-stage-kicker">Decoding</div>
-                                    <div class="method-vq-block decoder">
-                                        <span class="method-vq-edge" aria-hidden="true"></span>
-                                        <div class="method-vq-core">
-                                            <strong>VQ-VAE</strong>
-                                            <span>Decoder</span>
-                                            <div class="method-vq-bars"><span></span><span></span><span></span><span></span></div>
-                                            <div class="method-vq-mini-flow" aria-hidden="true"><span></span><span></span><span></span></div>
+                                    <div
+                                        class="method-module-card"
+                                        tabindex="0"
+                                        data-method-label="Latent Decoder"
+                                        data-method-meta="Trajectory Reconstruction"
+                                        data-method-copy="${escapeAttr(outputStep.copy || "Project clean tokens back into human-interpretable trajectories, joint states, or rendered sequences.")}"
+                                    >
+                                        <div class="method-vq-block decoder">
+                                            <span class="method-vq-edge" aria-hidden="true"></span>
+                                            <div class="method-vq-core">
+                                                <strong>VQ-VAE</strong>
+                                                <span>Decoder</span>
+                                                <div class="method-vq-bars"><span></span><span></span><span></span><span></span></div>
+                                                <div class="method-vq-mini-flow" aria-hidden="true"><span></span><span></span><span></span></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="method-context-row">
-                                        <span class="method-context-badge pink">beta</span>
-                                        <span class="method-context-badge green">delta Tcan</span>
+                                        <div class="method-context-row">
+                                            <span class="method-context-badge pink">beta</span>
+                                            <span class="method-context-badge green">delta Tcan</span>
+                                        </div>
                                     </div>
                                     <div class="method-stage-note">${outputStep.title}</div>
                                 </div>
 
-                                ${arrowMarkup}
-
                                 <div class="method-flow-stage output">
                                     <div class="method-stage-kicker">Reconstructed X<sup>*</sup></div>
-                                    <div class="method-scene-card">
-                                        <div class="method-person agent-a" style="--person-left:24px; --person-tilt:-14deg;"></div>
-                                        <div class="method-person agent-b" style="--person-left:54px; --person-tilt:10deg;"></div>
+                                    <div
+                                        class="method-module-card"
+                                        tabindex="0"
+                                        data-method-label="Final Motion Output"
+                                        data-method-meta="Renderable Sequence"
+                                        data-method-copy="${escapeAttr(outputStep.copy || "Decode the denoised representation into stable, coordinated motion that can be visualized or evaluated.")}"
+                                    >
+                                        <div class="method-scene-card">
+                                            <div class="method-person agent-a" style="--person-left:24px; --person-tilt:-14deg;"></div>
+                                            <div class="method-person agent-b" style="--person-left:54px; --person-tilt:10deg;"></div>
+                                        </div>
                                     </div>
-                                    <div class="method-stage-note">${outputStep.copy}</div>
+                                    <div class="method-stage-note">Decoded coordinated motion</div>
                                 </div>
                             </div>
 
+                            <div class="method-inspector" aria-live="polite">
+                                <span class="method-inspector-meta" id="methodInspectorMeta">System Map</span>
+                                <div class="method-inspector-body">
+                                    <strong id="methodInspectorTitle">Hover or focus a module</strong>
+                                    <p id="methodInspectorCopy">Trace how motion enters the latent space, picks up noise, gets denoised, and is reconstructed into coordinated output.</p>
+                                </div>
+                            </div>
                             <div class="method-pipeline-divider"></div>
 
                             <div class="method-legend-grid">
@@ -882,6 +1128,53 @@
                     </div>
                 </div>
             `;
+
+            const methodShell = methodGrid.querySelector(".method-pipeline-shell");
+            const inspectorMeta = methodGrid.querySelector("#methodInspectorMeta");
+            const inspectorTitle = methodGrid.querySelector("#methodInspectorTitle");
+            const inspectorCopy = methodGrid.querySelector("#methodInspectorCopy");
+            const modules = methodGrid.querySelectorAll(".method-module-card[data-method-label]");
+            const defaultState = {
+                meta: "System Map",
+                title: "Hover or focus a module",
+                copy: "Trace how motion enters the latent space, picks up noise, gets denoised, and is reconstructed into coordinated output."
+            };
+
+            const setInspector = (stateValue) => {
+                inspectorMeta.textContent = stateValue.meta;
+                inspectorTitle.textContent = stateValue.title;
+                inspectorCopy.textContent = stateValue.copy;
+            };
+
+            const clearFocus = () => {
+                methodGrid.querySelectorAll(".method-flow-stage.is-focused").forEach((stage) => {
+                    stage.classList.remove("is-focused");
+                });
+                setInspector(defaultState);
+            };
+
+            setInspector(defaultState);
+            modules.forEach((module) => {
+                const activateModule = () => {
+                    clearFocus();
+                    const parentStage = module.closest(".method-flow-stage");
+                    if (parentStage) {
+                        parentStage.classList.add("is-focused");
+                    }
+                    setInspector({
+                        meta: module.dataset.methodMeta || "Module",
+                        title: module.dataset.methodLabel || "Module",
+                        copy: module.dataset.methodCopy || defaultState.copy
+                    });
+                };
+
+                module.addEventListener("mouseenter", activateModule);
+                module.addEventListener("focus", activateModule);
+                module.addEventListener("mouseleave", clearFocus);
+                module.addEventListener("blur", clearFocus);
+            });
+
+            methodShell.addEventListener("mouseleave", clearFocus);
         }
 
         function getScheduleCellClass(rowIndex, columnIndex, cleanIndices, frame) {
@@ -1048,6 +1341,8 @@
             initSchedule();
             initComparisons();
             initResults();
+            initScrollMotion();
+            initPremiumHover();
         }
 
         init();
