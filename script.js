@@ -113,21 +113,21 @@
             scheduleModes: [
                 {
                     label: "ST Path",
-                    description: "The Spatial-Temporal path first models spatial entity configurations within each frame, then captures how those configurations evolve across time. Position-defined micro-actions like 'covering face' benefit most from this processing order.",
-                    formula: "ST: Spatial-T(X) → Temporal-T(X_spatial)",
-                    cleanPattern: [4, 5, 6, 7, 8, 9, 10, 11]
+                    description: "Spatial-first: within each frame, the Spatial Transformer captures inter-entity configurations. Then the Temporal Transformer tracks how those configurations evolve across all 8 frames. Position-defined micro-actions like 'covering face' benefit most from this order.",
+                    formula: "X_ST = Temporal-T( Spatial-T(X) + MLP_s(X) )",
+                    cleanPattern: [0, 1, 2, 3, 4, 5, 6, 7]
                 },
                 {
                     label: "TS Path",
-                    description: "The Temporal-Spatial path first extracts per-entity temporal dynamics across frames, then models the spatial relationships between those motion patterns. Motion-defined micro-actions like 'leg shaking' benefit most from this processing order.",
-                    formula: "TS: Temporal-T(X) → Spatial-T(X_temporal)",
-                    cleanPattern: [5, 6, 7, 8]
+                    description: "Temporal-first: the Temporal Transformer extracts motion dynamics for each entity across all 8 frames. Then the Spatial Transformer models the relationships between those motion patterns. Motion-defined micro-actions like 'leg shaking' benefit most from this order.",
+                    formula: "X_TS = Spatial-T( Temporal-T(X) + MLP_t(X) )",
+                    cleanPattern: [0, 1, 2, 3, 4, 5]
                 },
                 {
                     label: "Dual Path",
-                    description: "Entity-level adaptive routing blends ST and TS representations with learned per-entity weights. Each body part independently selects its optimal processing preference, consistently outperforming either single path alone (+9.99% over single-path).",
-                    formula: "X_fused = α_ST · X_ST + α_TS · X_TS",
-                    cleanPattern: [4, 5, 6, 7, 8, 9]
+                    description: "Entity-level adaptive routing learns per-entity softmax weights over ST and TS outputs. Position-based entities (Head, Face, Torso) favor ST while motion-based entities (Hands, Lower Body) favor TS. MAC loss enforces cross-path coherence before routing.",
+                    formula: "X_fused = α_ST·X_ST + α_TS·X_TS,  [α_ST,α_TS] = softmax(R_i([X_ST;X_TS])/τ)",
+                    cleanPattern: [0]
                 }
             ],
             comparisons: [
@@ -171,9 +171,12 @@
         };
 
         const scheduleRows = [
-            { label: "Agent A" },
-            { label: "Agent B" },
-            { label: "Context" }
+            { label: "Head",       stWeight: 0.72, tsWeight: 0.28, type: "position" },
+            { label: "Face",       stWeight: 0.68, tsWeight: 0.32, type: "position" },
+            { label: "L.Hand",     stWeight: 0.35, tsWeight: 0.65, type: "motion"   },
+            { label: "R.Hand",     stWeight: 0.30, tsWeight: 0.70, type: "motion"   },
+            { label: "Torso",      stWeight: 0.62, tsWeight: 0.38, type: "position" },
+            { label: "Lower Body", stWeight: 0.28, tsWeight: 0.72, type: "motion"   }
         ];
 
         const iconRegistry = {
@@ -667,11 +670,10 @@
         function initMethod() {
             const methodGrid = document.getElementById("methodGrid");
             const steps = siteConfig.method;
-            const inputStep = steps[0] || { title: "Input Representation", copy: "", tokens: [] };
-            const modelStep = steps[1] || { title: "Core Model", copy: "", tokens: [] };
-            const condStep = steps[2] || { title: "Conditioning Logic", copy: "", tokens: [] };
-            const outputStep = steps[3] || { title: "Outputs", copy: "", tokens: [] };
-            const chipTones = ["tone-a", "tone-b", "tone-c", "tone-d", "tone-e"];
+            const semStep     = steps[0] || {};
+            const stStep      = steps[1] || {};
+            const tsStep      = steps[2] || {};
+            const routingStep = steps[3] || {};
             const arrowMarkup = `
                 <div class="method-arrow" aria-hidden="true">
                     <span class="method-arrow-packet packet-a"></span>
@@ -679,173 +681,145 @@
                     <span class="method-arrow-packet packet-c"></span>
                 </div>
             `;
-            const renderChips = (tokens) => tokens.map((token, index) => {
-                return "<span class='method-chip " + chipTones[index % chipTones.length] + "'>" + token + "</span>";
+
+            const entityChips = [
+                { key: "head",  label: "Head",       cls: "mdn-entity-head"  },
+                { key: "face",  label: "Face",       cls: "mdn-entity-face"  },
+                { key: "lhand", label: "L.Hand",     cls: "mdn-entity-lhand" },
+                { key: "rhand", label: "R.Hand",     cls: "mdn-entity-rhand" },
+                { key: "torso", label: "Torso",      cls: "mdn-entity-torso" },
+                { key: "lower", label: "Lower Body", cls: "mdn-entity-lower" }
+            ];
+            const entityChipMarkup = entityChips.map(e =>
+                "<span class='mdn-entity-chip " + e.cls + "'>" + e.label + "</span>"
+            ).join("");
+
+            const routingRows = scheduleRows.map(function(row) {
+                const stPct = Math.round(row.stWeight * 100);
+                const tsPct = 100 - stPct;
+                return "<div class='mdn-routing-row'>" +
+                    "<span class='mdn-routing-label'>" + row.label + "</span>" +
+                    "<div class='mdn-routing-bar'>" +
+                        "<div class='mdn-routing-st' style='width:" + stPct + "%' title='ST " + stPct + "%'></div>" +
+                        "<div class='mdn-routing-ts' style='width:" + tsPct + "%' title='TS " + tsPct + "%'></div>" +
+                    "</div>" +
+                "</div>";
             }).join("");
 
             methodGrid.innerHTML = `
                 <div class="method-pipeline-shell">
-                    <h4 class="method-pipeline-title">Model Training Pipeline</h4>
-                    <p class="method-pipeline-subtitle">A dummy architecture flow inspired by the MAGNet-style training diagram.</p>
+                    <h4 class="method-pipeline-title">Micro-DualNet: Training Pipeline</h4>
+                    <p class="method-pipeline-subtitle">Keypoint-guided entity extraction → parallel ST/TS paths → entity-level adaptive routing → classification</p>
                     <div class="method-pipeline-scroll">
                         <div class="method-pipeline-board">
-                            <div class="method-flow-track">
-                                <div class="method-flow-stage input">
-                                    <div class="method-stage-kicker">Input Motion</div>
-                                    <div class="method-scene-card">
-                                        <div class="method-person agent-a"></div>
-                                        <div class="method-person agent-b"></div>
-                                    </div>
-                                    <div class="method-stage-note">${inputStep.title}</div>
-                                    <div class="method-repr-stack">
-                                        <div class="method-repr-row agent-a">
-                                            <div class="method-repr-agent">A</div>
-                                            <div class="method-repr-tokens">${renderChips(inputStep.tokens)}</div>
+                            <div class="method-flow-track mdn-flow-track">
+
+                                <!-- Stage 1: Input -->
+                                <div class="method-flow-stage">
+                                    <div class="method-stage-kicker">Input</div>
+                                    <div class="mdn-stage-box">
+                                        <div class="mdn-frame-grid">
+                                            ${Array.from({length: 8}, (_, i) =>
+                                                "<div class='mdn-frame mdn-frame-" + (i % 3) + "'></div>"
+                                            ).join("")}
                                         </div>
-                                        <div class="method-repr-row agent-b">
-                                            <div class="method-repr-agent">B</div>
-                                            <div class="method-repr-tokens">${renderChips(inputStep.tokens.slice().reverse())}</div>
+                                        <div class="mdn-badge-row">
+                                            <span class="mdn-badge mdn-badge-blue">T=8 frames</span>
+                                            <span class="mdn-badge mdn-badge-gray">25 joints</span>
                                         </div>
                                     </div>
+                                    <div class="method-stage-note">224×224 RGB video<br>+ OpenPose keypoints</div>
                                 </div>
 
                                 ${arrowMarkup}
 
-                                <div class="method-flow-stage encoding">
-                                    <div class="method-stage-kicker">Encoding</div>
-                                    <div class="method-vq-block encoder">
-                                        <span class="method-vq-edge" aria-hidden="true"></span>
-                                        <div class="method-vq-core">
-                                            <strong>VQ-VAE</strong>
-                                            <span>Encoder</span>
-                                            <div class="method-vq-bars"><span></span><span></span><span></span><span></span></div>
-                                            <div class="method-vq-mini-flow" aria-hidden="true"><span></span><span></span><span></span></div>
-                                        </div>
+                                <!-- Stage 2: Backbone -->
+                                <div class="method-flow-stage">
+                                    <div class="method-stage-kicker">Backbone</div>
+                                    <div class="mdn-stage-box mdn-backbone-box">
+                                        <strong>ResNet-101</strong>
+                                        <div class="mdn-backbone-tag">+ TSM</div>
+                                        <div class="mdn-shape-label">[B·T, 2048, H', W']</div>
                                     </div>
-                                    <div class="method-context-row">
-                                        <span class="method-context-badge pink">beta</span>
-                                        <span class="method-context-badge green">delta Tcan</span>
-                                    </div>
-                                    <div class="method-stage-note">${modelStep.title}</div>
+                                    <div class="method-stage-note">${stStep.tokens ? stStep.tokens[0] : "Kinetics-400 pretrained"}</div>
                                 </div>
 
                                 ${arrowMarkup}
 
-                                <div class="method-flow-stage tokens">
-                                    <div class="method-stage-kicker">Noisy Tokens</div>
-                                    <div class="method-token-math">
-                                        <div class="method-token-col">
-                                            <div class="method-token-col-label">M<sub>0</sub></div>
-                                            <span class="method-token-square agent-a"></span>
-                                            <span class="method-token-square agent-b"></span>
-                                            <span class="method-token-square agent-a"></span>
-                                            <span class="method-token-square agent-b"></span>
-                                            <span class="method-token-square agent-a"></span>
-                                        </div>
-                                        <div class="method-token-sign">+</div>
-                                        <div class="method-token-col">
-                                            <div class="method-token-col-label">&epsilon;</div>
-                                            <span class="method-token-square noise"></span>
-                                            <span class="method-token-square noise"></span>
-                                            <span class="method-token-square noise"></span>
-                                            <span class="method-token-square noise"></span>
-                                            <span class="method-token-square noise"></span>
-                                        </div>
-                                        <div class="method-token-sign">=</div>
-                                        <div class="method-token-col">
-                                            <div class="method-token-col-label">M&#771;(&tau;)</div>
-                                            <span class="method-token-square mix-a"></span>
-                                            <span class="method-token-square mix-b"></span>
-                                            <span class="method-token-square mix-a"></span>
-                                            <span class="method-token-square mix-b"></span>
-                                            <span class="method-token-square mix-a"></span>
-                                        </div>
+                                <!-- Stage 3: SEM -->
+                                <div class="method-flow-stage">
+                                    <div class="method-stage-kicker">SEM</div>
+                                    <div class="mdn-stage-box mdn-sem-box">
+                                        <div class="mdn-sem-title">Spatial Entity Module</div>
+                                        <div class="mdn-entity-grid">${entityChipMarkup}</div>
+                                        <div class="mdn-shape-label">[B, T, K, 256]</div>
                                     </div>
-                                    <div class="method-stage-note">${condStep.title}</div>
+                                    <div class="method-stage-note">${semStep.tokens ? semStep.tokens.slice(0,3).join(" · ") : "ROIAlign + depthwise conv"}</div>
                                 </div>
 
                                 ${arrowMarkup}
 
-                                <div class="method-flow-stage denoiser">
-                                    <div class="method-stage-kicker">Denoiser F<sub>&phi;</sub></div>
-                                    <div class="method-denoiser-box">
-                                        <strong>${modelStep.step}</strong>
-                                        <h5>DFoT</h5>
-                                        <p>Diffusion-forcing transformer with iterative coordination.</p>
-                                        <div class="method-denoiser-steps"><span></span><span></span><span></span><span></span><span></span></div>
-                                    </div>
-                                    <div class="method-stage-note">${modelStep.copy}</div>
-                                </div>
-
-                                ${arrowMarkup}
-
-                                <div class="method-flow-stage clean">
-                                    <div class="method-stage-kicker">M<sub>0</sub></div>
-                                    <div class="method-clean-stack">
-                                        <span class="method-token-square agent-a"></span>
-                                        <span class="method-token-square agent-b"></span>
-                                        <span class="method-token-square agent-a"></span>
-                                        <span class="method-token-square agent-b"></span>
-                                        <span class="method-token-square agent-a"></span>
-                                    </div>
-                                    <div class="method-stage-note">${outputStep.step}</div>
-                                </div>
-
-                                ${arrowMarkup}
-
-                                <div class="method-flow-stage decoding">
-                                    <div class="method-stage-kicker">Decoding</div>
-                                    <div class="method-vq-block decoder">
-                                        <span class="method-vq-edge" aria-hidden="true"></span>
-                                        <div class="method-vq-core">
-                                            <strong>VQ-VAE</strong>
-                                            <span>Decoder</span>
-                                            <div class="method-vq-bars"><span></span><span></span><span></span><span></span></div>
-                                            <div class="method-vq-mini-flow" aria-hidden="true"><span></span><span></span><span></span></div>
+                                <!-- Stage 4: Dual Paths -->
+                                <div class="method-flow-stage">
+                                    <div class="method-stage-kicker">Dual Paths</div>
+                                    <div class="mdn-dual-fork">
+                                        <div class="mdn-path-box mdn-path-st">
+                                            <span class="mdn-path-label">ST Path</span>
+                                            <span class="mdn-path-formula">Spatial-T &rarr; Temporal-T</span>
+                                        </div>
+                                        <div class="mdn-fork-divider" aria-hidden="true"></div>
+                                        <div class="mdn-path-box mdn-path-ts">
+                                            <span class="mdn-path-label">TS Path</span>
+                                            <span class="mdn-path-formula">Temporal-T &rarr; Spatial-T</span>
                                         </div>
                                     </div>
-                                    <div class="method-context-row">
-                                        <span class="method-context-badge pink">beta</span>
-                                        <span class="method-context-badge green">delta Tcan</span>
-                                    </div>
-                                    <div class="method-stage-note">${outputStep.title}</div>
+                                    <div class="method-stage-note">3-layer transformers<br>8 heads, D=256</div>
                                 </div>
 
                                 ${arrowMarkup}
 
-                                <div class="method-flow-stage output">
-                                    <div class="method-stage-kicker">Reconstructed X<sup>*</sup></div>
-                                    <div class="method-scene-card">
-                                        <div class="method-person agent-a" style="--person-left:24px; --person-tilt:-14deg;"></div>
-                                        <div class="method-person agent-b" style="--person-left:54px; --person-tilt:10deg;"></div>
+                                <!-- Stage 5: Routing + MAC -->
+                                <div class="method-flow-stage">
+                                    <div class="method-stage-kicker">Routing</div>
+                                    <div class="mdn-stage-box mdn-routing-box">
+                                        <div class="mdn-routing-title">Entity Routing</div>
+                                        <div class="mdn-routing-rows">${routingRows}</div>
+                                        <span class="mdn-badge mdn-badge-green">+ MAC Loss</span>
                                     </div>
-                                    <div class="method-stage-note">${outputStep.copy}</div>
+                                    <div class="method-stage-note">${routingStep.tokens ? routingStep.tokens.slice(0,2).join(" · ") : "&alpha;_ST &middot; X_ST + &alpha;_TS &middot; X_TS"}</div>
                                 </div>
+
+                                ${arrowMarkup}
+
+                                <!-- Stage 6: Classifier -->
+                                <div class="method-flow-stage">
+                                    <div class="method-stage-kicker">Output</div>
+                                    <div class="mdn-stage-box mdn-output-box">
+                                        <div class="mdn-concat-label">[f<sub>CNN</sub> ; f<sub>entity</sub>]</div>
+                                        <div class="mdn-mlp-arrow" aria-hidden="true"></div>
+                                        <div class="mdn-class-box">
+                                            <span>MLP</span>
+                                            <span class="mdn-class-badge">52 classes</span>
+                                        </div>
+                                    </div>
+                                    <div class="method-stage-note">L<sub>CE</sub> + &lambda; L<sub>MAC</sub><br>&lambda; = 0.1</div>
+                                </div>
+
                             </div>
 
                             <div class="method-pipeline-divider"></div>
 
                             <div class="method-legend-grid">
                                 <div>
-                                    <div class="method-legend-title">Agents</div>
+                                    <div class="method-legend-title">Processing Paths</div>
                                     <div class="method-agent-list">
-                                        <div class="method-agent-pill"><span style="background:#769ad7;"></span><span>Agent A</span></div>
-                                        <div class="method-agent-pill"><span style="background:#8ca9dd;"></span><span>Agent B</span></div>
+                                        <div class="method-agent-pill"><span style="background:rgba(95,150,234,0.7);"></span><span>ST — Spatial &rarr; Temporal</span></div>
+                                        <div class="method-agent-pill"><span style="background:rgba(234,140,80,0.7);"></span><span>TS — Temporal &rarr; Spatial</span></div>
                                     </div>
                                 </div>
-
                                 <div>
-                                    <div class="method-legend-title">Motion Token m<sub>p</sub></div>
-                                    <div class="method-composition-card">
-                                        <div class="method-composition-row">
-                                            <strong>m<sup>A</sup></strong>
-                                            <div class="method-composition-inner">${renderChips(inputStep.tokens)}</div>
-                                        </div>
-                                        <div class="method-composition-row">
-                                            <strong>m<sup>B</sup></strong>
-                                            <div class="method-composition-inner">${renderChips(inputStep.tokens.slice().reverse())}</div>
-                                        </div>
-                                    </div>
+                                    <div class="method-legend-title">Spatial Entities (K=6 for MA-52, K=5 for iMiGUE)</div>
+                                    <div class="mdn-legend-chips">${entityChipMarkup}</div>
                                 </div>
                             </div>
                         </div>
@@ -854,21 +828,22 @@
             `;
         }
 
-        function getScheduleCellClass(rowIndex, columnIndex, cleanIndices, frame) {
-            if (rowIndex === 2 && columnIndex < 4) {
-                return "schedule-cell context";
+        function getScheduleCellClass(rowIndex, columnIndex, modeIndex, frame) {
+            if (modeIndex === 0) {
+                // ST path: spatial-first — process frame by frame (column by column)
+                if (columnIndex < frame) return "schedule-cell st-done";
+                if (columnIndex === frame) return "schedule-cell st-active";
+                return "schedule-cell pending";
             }
-            if (columnIndex < 4) {
-                return "schedule-cell context";
+            if (modeIndex === 1) {
+                // TS path: temporal-first — process entity by entity (row by row)
+                if (rowIndex < frame) return "schedule-cell ts-done";
+                if (rowIndex === frame) return "schedule-cell ts-active";
+                return "schedule-cell pending";
             }
-            if (!cleanIndices.includes(columnIndex)) {
-                return "schedule-cell";
-            }
-            const visibleClean = cleanIndices.filter((index) => index <= cleanIndices[Math.min(frame, cleanIndices.length - 1)]);
-            if (visibleClean.includes(columnIndex)) {
-                return "schedule-cell clean" + (columnIndex === visibleClean[visibleClean.length - 1] ? " focus" : "");
-            }
-            return "schedule-cell noisy";
+            // Dual path: show learned routing preference per entity
+            const row = scheduleRows[rowIndex];
+            return row.stWeight >= row.tsWeight ? "schedule-cell st-dominant" : "schedule-cell ts-dominant";
         }
 
         function renderSchedule() {
@@ -876,7 +851,8 @@
             setText("scheduleTitle", mode.label);
             setText("scheduleDescription", mode.description);
             setText("scheduleFormula", mode.formula);
-            setText("frameLabel", "Frame " + (state.frame + 1) + " / " + mode.cleanPattern.length);
+            const totalSteps = mode.cleanPattern.length;
+            setText("frameLabel", "Step " + (state.frame + 1) + " / " + totalSteps);
 
             document.querySelectorAll(".schedule-tab").forEach((button, index) => {
                 button.classList.toggle("active", index === state.scheduleModeIndex);
@@ -892,13 +868,42 @@
                 label.textContent = row.label;
                 rowElement.appendChild(label);
 
-                for (let columnIndex = 0; columnIndex < 12; columnIndex += 1) {
+                for (let columnIndex = 0; columnIndex < 8; columnIndex += 1) {
                     const cell = document.createElement("div");
-                    cell.className = getScheduleCellClass(rowIndex, columnIndex, mode.cleanPattern, state.frame);
+                    cell.className = getScheduleCellClass(rowIndex, columnIndex, state.scheduleModeIndex, state.frame);
                     rowElement.appendChild(cell);
                 }
                 rows.appendChild(rowElement);
             });
+
+            // Routing legend — shown only in Dual Path tab
+            let routingLegend = document.getElementById("routingLegend");
+            if (state.scheduleModeIndex === 2) {
+                if (!routingLegend) {
+                    routingLegend = document.createElement("div");
+                    routingLegend.id = "routingLegend";
+                    routingLegend.className = "routing-legend";
+                    rows.parentNode.insertBefore(routingLegend, rows.nextSibling);
+                }
+                routingLegend.innerHTML = "<div class='routing-legend-title'>Learned Routing Weights per Entity</div>" +
+                    scheduleRows.map(function(row) {
+                        const stPct = Math.round(row.stWeight * 100);
+                        const tsPct = Math.round(row.tsWeight * 100);
+                        return "<div class='routing-legend-row'>" +
+                            "<span class='routing-entity-label'>" + row.label + "</span>" +
+                            "<div class='routing-bar-wrap'>" +
+                                "<div class='routing-bar-st' style='width:" + stPct + "%'>" +
+                                    (stPct > 18 ? "&alpha;<sub>ST</sub> " + stPct + "%" : "") +
+                                "</div>" +
+                                "<div class='routing-bar-ts' style='width:" + tsPct + "%'>" +
+                                    (tsPct > 18 ? "&alpha;<sub>TS</sub> " + tsPct + "%" : "") +
+                                "</div>" +
+                            "</div>" +
+                        "</div>";
+                    }).join("");
+            } else {
+                if (routingLegend) { routingLegend.remove(); }
+            }
         }
 
         function startScheduleLoop() {
@@ -917,7 +922,7 @@
         function initSchedule() {
             const tabs = document.getElementById("scheduleTabs");
             const axis = document.getElementById("scheduleAxis");
-            axis.innerHTML = "<div>Time</div>" + Array.from({ length: 12 }, (_, index) => "<div>t" + index + "</div>").join("");
+            axis.innerHTML = "<div>Frames &rarr;</div>" + Array.from({ length: 8 }, (_, index) => "<div>T" + (index + 1) + "</div>").join("");
 
             tabs.innerHTML = "";
             siteConfig.scheduleModes.forEach((mode, index) => {
