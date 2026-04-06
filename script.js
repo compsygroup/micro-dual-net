@@ -10,8 +10,8 @@
                 title: "Micro-DualNet: Dual-Path Spatio–Temporal Network for Micro-Action Recognition",
                 tagline: "A keypoint-guided dual-path network that processes anatomically-grounded body entities through parallel Spatial-Temporal and Temporal-Spatial pathways, enabling flexible per-entity processing for fine-grained micro-action recognition.",
                 authors: [
-                    { name: "Naga VS Raviteja Chappa", url: "#", markers: ["1"] },
-                    { name: "Evangelos Sariyanidi", url: "#", markers: ["1"] },
+                    { name: "Naga VS Raviteja Chappa", url: "https://nchappa.github.io", markers: ["1"] },
+                    { name: "Evangelos Sariyanidi", url: "https://sariyanidi.com/", markers: ["1"] },
                     { name: "Lisa Yankowitz", url: "#", markers: ["1"] },
                     { name: "Gokul Nair", url: "#", markers: ["1"] },
                     { name: "Casey J. Zampella", url: "#", markers: ["1", "2"] },
@@ -25,7 +25,7 @@
                 contributionNote: "",
                 links: {
                     paper: "#",
-                    code: "#"
+                    code: "https://github.com/compsygroup/Micro-DualNet"
                 },
                 stats: [
                     { value: "65.10%", label: "Top-1 Accuracy on MA-52" },
