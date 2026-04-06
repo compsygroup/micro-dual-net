@@ -2493,6 +2493,13 @@
             box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.22);
         }
 
+        .schedule-cell:hover {
+            transform: scale(1.12);
+            box-shadow: 0 0 12px rgba(22, 32, 51, 0.15);
+            z-index: 2;
+            position: relative;
+        }
+
         /* --- Dual-path schedule cell variants --- */
         .schedule-cell.pending {
             background: rgba(143, 175, 215, 0.10);
@@ -2501,17 +2508,13 @@
             background: rgba(95, 150, 234, 0.30);
         }
         .schedule-cell.st-active {
-            background: rgba(95, 150, 234, 0.80);
-            transform: scale(1.10);
-            box-shadow: 0 0 10px rgba(95, 150, 234, 0.35);
+            background: rgba(95, 150, 234, 0.82);
         }
         .schedule-cell.ts-done {
             background: rgba(234, 140, 80, 0.30);
         }
         .schedule-cell.ts-active {
-            background: rgba(234, 140, 80, 0.85);
-            transform: scale(1.10);
-            box-shadow: 0 0 10px rgba(234, 140, 80, 0.35);
+            background: rgba(234, 140, 80, 0.87);
         }
         .schedule-cell.st-dominant {
             background: rgba(95, 150, 234, 0.55);
@@ -3210,4 +3213,235 @@
             .compare-stage {
                 aspect-ratio: 4 / 3;
             }
+        }
+
+        /* =========================================
+           Micro-DualNet — Animated Arrow Connectors
+           ========================================= */
+
+        .method-arrow {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 60px;
+            overflow: visible;
+            z-index: 5;
+        }
+
+        /* Horizontal connecting line */
+        .method-arrow::before {
+            content: '';
+            position: absolute;
+            top: 76px;
+            left: -16px;
+            right: -16px;
+            height: 1.5px;
+            background: linear-gradient(90deg,
+                rgba(95, 150, 234, 0.05),
+                rgba(95, 150, 234, 0.48) 35%,
+                rgba(95, 150, 234, 0.48) 65%,
+                rgba(95, 150, 234, 0.05)
+            );
+            border-radius: 2px;
+        }
+
+        /* Arrowhead */
+        .method-arrow::after {
+            content: '';
+            position: absolute;
+            top: 69px;
+            right: -19px;
+            border-top: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+            border-left: 9px solid rgba(95, 150, 234, 0.58);
+        }
+
+        /* Animated traveling packets */
+        .method-arrow-packet {
+            position: absolute;
+            top: 69px;
+            left: -14px;
+            width: 8px;
+            height: 8px;
+            margin-top: -4px;
+            border-radius: 50%;
+            background: rgba(95, 150, 234, 0.95);
+            box-shadow: 0 0 7px rgba(95, 150, 234, 0.6);
+            animation: mdn-packet-travel 1.8s ease-in-out infinite;
+        }
+
+        .packet-b { animation-delay: 0.6s; }
+        .packet-c { animation-delay: 1.2s; }
+
+        @keyframes mdn-packet-travel {
+            0%   { transform: translateX(0) scale(0.5); opacity: 0; }
+            8%   { transform: translateX(4px) scale(1); opacity: 1; }
+            90%  { transform: translateX(50px) scale(1); opacity: 1; }
+            100% { transform: translateX(56px) scale(0.5); opacity: 0; }
+        }
+
+        /* =========================================
+           Stage box + path hover effects
+           ========================================= */
+
+        .mdn-stage-box {
+            transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+                        box-shadow 0.22s ease,
+                        border-color 0.22s ease;
+        }
+
+        .mdn-stage-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 28px rgba(22, 32, 51, 0.13), 0 0 0 2px rgba(95, 150, 234, 0.22);
+            border-color: rgba(95, 150, 234, 0.32);
+        }
+
+        html[data-theme="dark"] .mdn-stage-box:hover {
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32), 0 0 0 2px rgba(95, 150, 234, 0.28);
+        }
+
+        .mdn-path-box {
+            transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+                        background 0.22s ease,
+                        box-shadow 0.22s ease;
+        }
+
+        .mdn-path-st:hover {
+            transform: translateY(-4px);
+            background: rgba(95, 150, 234, 0.22);
+            box-shadow: 0 6px 18px rgba(95, 150, 234, 0.22);
+        }
+
+        .mdn-path-ts:hover {
+            transform: translateY(-4px);
+            background: rgba(234, 140, 80, 0.22);
+            box-shadow: 0 6px 18px rgba(234, 140, 80, 0.22);
+        }
+
+        .mdn-entity-chip {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            cursor: default;
+        }
+
+        .mdn-entity-chip:hover {
+            transform: scale(1.14) translateY(-2px);
+            box-shadow: 0 3px 10px rgba(22, 32, 51, 0.12);
+            z-index: 2;
+            position: relative;
+        }
+
+        /* =========================================
+           Pipeline entrance animation (stagger)
+           ========================================= */
+
+        @keyframes mdn-stage-in {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .method-pipeline-shell.is-active .method-flow-stage {
+            animation: mdn-stage-in 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .method-pipeline-shell.is-active .mdn-flow-track > :nth-child(1)  { animation-delay: 0.05s; }
+        .method-pipeline-shell.is-active .mdn-flow-track > :nth-child(3)  { animation-delay: 0.15s; }
+        .method-pipeline-shell.is-active .mdn-flow-track > :nth-child(5)  { animation-delay: 0.25s; }
+        .method-pipeline-shell.is-active .mdn-flow-track > :nth-child(7)  { animation-delay: 0.35s; }
+        .method-pipeline-shell.is-active .mdn-flow-track > :nth-child(9)  { animation-delay: 0.45s; }
+        .method-pipeline-shell.is-active .mdn-flow-track > :nth-child(11) { animation-delay: 0.55s; }
+
+        /* Routing bar fill animation on scroll-in */
+        @keyframes mdn-bar-fill {
+            from { transform: scaleX(0); }
+            to   { transform: scaleX(1); }
+        }
+
+        .method-pipeline-shell.is-active .mdn-routing-st,
+        .method-pipeline-shell.is-active .mdn-routing-ts {
+            transform-origin: left center;
+            animation: mdn-bar-fill 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation-delay: calc(var(--row-index, 0) * 0.09s + 0.55s);
+        }
+
+        /* =========================================
+           Schedule cell pulse animations
+           ========================================= */
+
+        @keyframes st-cell-pulse {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(95, 150, 234, 0.4);
+                transform: scale(1.10);
+            }
+            50% {
+                box-shadow: 0 0 22px rgba(95, 150, 234, 0.75), 0 0 36px rgba(95, 150, 234, 0.3);
+                transform: scale(1.18);
+            }
+        }
+
+        @keyframes ts-cell-pulse {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(234, 140, 80, 0.4);
+                transform: scale(1.10);
+            }
+            50% {
+                box-shadow: 0 0 22px rgba(234, 140, 80, 0.75), 0 0 36px rgba(234, 140, 80, 0.3);
+                transform: scale(1.18);
+            }
+        }
+
+        @keyframes dominant-breathe {
+            0%, 100% { opacity: 0.65; transform: scale(1.0); }
+            50%      { opacity: 1.0;  transform: scale(1.05); }
+        }
+
+        .schedule-cell.st-active {
+            animation: st-cell-pulse 0.9s ease-in-out infinite !important;
+        }
+
+        .schedule-cell.ts-active {
+            animation: ts-cell-pulse 0.9s ease-in-out infinite !important;
+        }
+
+        .schedule-cell.st-dominant {
+            animation: dominant-breathe 2.8s ease-in-out infinite;
+        }
+
+        .schedule-cell.ts-dominant {
+            animation: dominant-breathe 2.8s ease-in-out infinite;
+            animation-delay: 1.4s;
+        }
+
+        /* =========================================
+           Routing legend bar fill animation (Dual tab)
+           ========================================= */
+
+        @keyframes routing-bar-grow {
+            from { transform: scaleX(0); }
+            to   { transform: scaleX(1); }
+        }
+
+        .routing-bar-st.animating {
+            transform-origin: left center;
+            animation: routing-bar-grow 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation-delay: calc(var(--bar-index, 0) * 0.08s + 0.05s);
+        }
+
+        .routing-bar-ts.animating {
+            transform-origin: left center;
+            animation: routing-bar-grow 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation-delay: calc(var(--bar-index, 0) * 0.08s + 0.1s);
+        }
+
+        /* =========================================
+           Schedule tab hover
+           ========================================= */
+
+        .schedule-tab {
+            transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+        }
+
+        .schedule-tab:hover:not(.active) {
+            background: rgba(95, 150, 234, 0.09);
+            transform: translateY(-1px);
         }
