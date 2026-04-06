@@ -2,12 +2,12 @@
         const siteConfig = {
             brand: {
                 mark: "PRJ",
-                title: "Project Backbone",
+                title: "Micro-Dual-Net",
                 subtitle: "A reusable single-page research website scaffold inspired by the MAGNet project layout."
             },
             hero: {
                 badge: "Research Project Website Template",
-                title: "Your Project Title Goes Here",
+                title: "Micro-Dual-Net",
                 tagline: "Use this area for the one-sentence explanation that tells visitors what your project does and why it matters.",
                 authors: [
                     { name: "Author One", url: "#", markers: ["*"] },
@@ -449,12 +449,13 @@
             }
             const placeholder = document.createElement("div");
             placeholder.className = target.id === "teaserMedia" ? "media-placeholder" : "placeholder-mini";
-            placeholder.innerHTML = "<div><strong>" + fallbackTitle + "</strong><p>" + fallbackCopy + "</p><code>Drop a media URL into siteConfig</code></div>";
+            const helper = target.id === "resultMedia" ? "" : "<code>Drop a media URL into siteConfig</code>";
+            placeholder.innerHTML = "<div><strong>" + fallbackTitle + "</strong><p>" + fallbackCopy + "</p>" + helper + "</div>";
             target.appendChild(placeholder);
         }
 
         function initHero() {
-            document.title = siteConfig.hero.title || "Research Project Backbone";
+            document.title = siteConfig.hero.title || "Micro-Dual-Net";
             document.getElementById("metaDescription").setAttribute(
                 "content",
                 siteConfig.hero.tagline || "Reusable research project website backbone."
