@@ -496,11 +496,13 @@
         }
 
         .stat {
+            position: relative;
             padding: 1rem;
             border-radius: 22px;
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(229, 237, 248, 0.8) 100%);
             border: 1px solid rgba(22, 32, 51, 0.08);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            overflow: hidden;
         }
 
         html[data-theme="dark"] .stat {
@@ -509,16 +511,42 @@
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
+        .stat.stat-tone-1 {
+            --stat-accent: #427fe0;
+        }
+
+        .stat.stat-tone-2 {
+            --stat-accent: #2f9dcb;
+        }
+
+        .stat.stat-tone-3 {
+            --stat-accent: #5e7de3;
+        }
+
         .stat strong {
             display: block;
-            font-size: 1.55rem;
-            letter-spacing: -0.06em;
-            margin-bottom: 0.2rem;
+            font-size: clamp(1.7rem, 2.45vw, 2.15rem);
+            line-height: 0.98;
+            letter-spacing: -0.08em;
+            margin-bottom: 0.24rem;
+            color: var(--text);
+        }
+
+        .stat.stat-tone-2 strong {
+            color: #245aa8;
         }
 
         .stat span {
             font-size: 0.9rem;
             color: var(--muted);
+        }
+
+        html[data-theme="dark"] .stat strong {
+            color: var(--text);
+        }
+
+        html[data-theme="dark"] .stat.stat-tone-2 strong {
+            color: #7eaef7;
         }
 
         .hero-card {
