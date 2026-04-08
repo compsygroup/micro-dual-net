@@ -13,7 +13,7 @@
                     { name: "Naga VS Raviteja Chappa", url: "https://nchappa.github.io", markers: ["1"] },
                     { name: "Evangelos Sariyanidi", url: "https://sariyanidi.com/", markers: ["1"] },
                     { name: "Lisa Yankowitz", url: "#", markers: ["1"] },
-                    { name: "Gokul Nair", url: "#", markers: ["1"] },
+                    { name: "Gokul M. Nair", url: "#", markers: ["1"] },
                     { name: "Casey J. Zampella", url: "#", markers: ["1", "2"] },
                     { name: "Robert T. Schultz", url: "#", markers: ["1", "2"] },
                     { name: "Birkan Tunç", url: "#", markers: ["1", "2"] }
