@@ -506,11 +506,146 @@
 
             const stats = document.getElementById("heroStats");
             stats.innerHTML = "";
-            siteConfig.hero.stats.forEach((item) => {
+            siteConfig.hero.stats.forEach((item, index) => {
                 const card = document.createElement("div");
-                card.className = "stat";
-                card.innerHTML = "<strong>" + item.value + "</strong><span>" + item.label + "</span>";
+                card.className = "stat stat-tone-" + ((index % 3) + 1);
+                card.innerHTML = "<strong data-stat-value=\"" + String(item.value).replace(/"/g, "&quot;") + "\">" + item.value + "</strong><span>" + item.label + "</span>";
                 stats.appendChild(card);
+            });
+        }
+
+        function parseMetricValue(rawValue) {
+            const value = String(rawValue).trim();
+            const match = value.match(/^([^0-9-]*)(-?\d+(?:\.\d+)?)(.*)$/);
+            if (!match) {
+                return null;
+            }
+
+            const [, prefix, numeric, suffix] = match;
+            const decimals = (numeric.split(".")[1] || "").length;
+
+            return {
+                prefix,
+                suffix,
+                value: Number(numeric),
+                decimals
+            };
+        }
+
+        function initHeroStatCounters() {
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const statValues = Array.from(document.querySelectorAll(".stat strong[data-stat-value]"));
+
+            statValues.forEach((node) => {
+                const metric = parseMetricValue(node.dataset.statValue);
+                if (!metric) {
+                    return;
+                }
+
+                const renderValue = (number) => {
+                    node.textContent = metric.prefix + number.toFixed(metric.decimals) + metric.suffix;
+                };
+
+                if (prefersReducedMotion || !window.gsap) {
+                    renderValue(metric.value);
+                    return;
+                }
+
+                const counter = { value: 0 };
+                renderValue(0);
+                window.gsap.to(counter, {
+                    value: metric.value,
+                    duration: 0.95,
+                    delay: 0.16,
+                    ease: "power2.out",
+                    onUpdate: () => {
+                        renderValue(counter.value);
+                    },
+                    onComplete: () => {
+                        renderValue(metric.value);
+                    }
+                });
+            });
+        }
+
+        function initHeroEntrance() {
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            if (prefersReducedMotion || !window.gsap) {
+                return;
+            }
+
+            const title = document.getElementById("heroTitle");
+            const tagline = document.getElementById("heroTagline");
+            const meta = document.querySelector(".hero-meta");
+            const actions = document.querySelector(".hero-actions");
+            const stats = document.getElementById("heroStats");
+            const heroCard = document.querySelector(".hero-card");
+            const heroCardArt = document.querySelector(".hero-card-art");
+
+            const secondaryTargets = [tagline, meta, actions, stats, heroCard].filter(Boolean);
+
+            window.gsap.set(title, {
+                autoAlpha: 0,
+                y: 42,
+                scale: 0.985,
+                filter: "blur(14px)"
+            });
+
+            window.gsap.set(secondaryTargets, {
+                autoAlpha: 0,
+                y: 24
+            });
+
+            if (heroCard) {
+                window.gsap.set(heroCard, {
+                    scale: 0.985,
+                    transformOrigin: "center top"
+                });
+            }
+
+            if (heroCardArt) {
+                window.gsap.set(heroCardArt, {
+                    autoAlpha: 0,
+                    scale: 1.04
+                });
+            }
+
+            const timeline = window.gsap.timeline({
+                defaults: {
+                    ease: "power3.out"
+                }
+            });
+
+            timeline.to(title, {
+                autoAlpha: 1,
+                y: 0,
+                scale: 1,
+                filter: "blur(0px)",
+                duration: 0.68
+            });
+
+            timeline.to(secondaryTargets, {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.48,
+                stagger: 0.05,
+                clearProps: "opacity,transform"
+            }, "-=0.38");
+
+            if (heroCardArt) {
+                timeline.to(heroCardArt, {
+                    autoAlpha: 1,
+                    scale: 1,
+                    duration: 0.56,
+                    ease: "power2.out",
+                    clearProps: "opacity,transform"
+                }, "-=0.32");
+            }
+
+            timeline.call(() => {
+                if (title) {
+                    title.style.removeProperty("filter");
+                }
             });
         }
 
@@ -1018,6 +1153,8 @@
         function init() {
             initTheme();
             initHero();
+            initHeroEntrance();
+            initHeroStatCounters();
             initUIIcons();
             initTeaser();
             initAbstract();
