@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,41 +8,100 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#FAFAF8;--surface:#FFF;--text:#1A1A1A;--text2:#555;--text3:#888;--accent:#1D4ED8;--accent-l:#DBEAFE;--accent-d:#1E3A8A;--border:#E5E5E5;--st:#2563EB;--ts:#DC2626;--dual:#059669;--serif:'Source Serif 4',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;--maxw:900px;--maxw-w:1100px}
+    /* ═══ THEME TOKENS ═══ */
+    :root {
+      --st:#2563EB;--ts:#DC2626;--dual:#059669;
+      --serif:'Source Serif 4',Georgia,serif;
+      --sans:'DM Sans',system-ui,sans-serif;
+      --mono:'JetBrains Mono',monospace;
+      --maxw:900px;--maxw-w:1100px;
+    }
+    /* DARK (default) */
+    [data-theme="dark"] {
+      --bg:#0B0F1A;--bg2:#111827;--surface:#1E293B;--surface2:#334155;
+      --text:#F1F5F9;--text2:#94A3B8;--text3:#64748B;
+      --accent:#6366F1;--accent-l:rgba(99,102,241,.15);--accent-d:#4F46E5;
+      --border:#1E293B;--border2:#334155;
+      --hero-grad:linear-gradient(180deg,#111827 0%,#0B0F1A 100%);
+      --hero-orb1:rgba(99,102,241,.08);--hero-orb2:rgba(5,150,105,.06);
+      --card-hover:rgba(99,102,241,.08);
+      --nav-bg:rgba(11,15,26,.88);
+      --table-head:#111827;--table-hover:rgba(99,102,241,.04);
+      --tldr-bg:linear-gradient(135deg,rgba(99,102,241,.08),rgba(124,58,237,.06));
+      --tldr-border:rgba(99,102,241,.2);
+      --clinical-bg:linear-gradient(135deg,rgba(5,150,105,.08),rgba(5,150,105,.04));
+      --viz-bg:#0F172A;--viz-border:#1E293B;--viz-surface:#1E293B;--viz-surface2:#334155;
+      --viz-text:#CBD5E1;--viz-text2:#94A3B8;--viz-text3:#64748B;
+      --fig-bg:#111827;--fig-dash:#1E293B;--fig-hatch:rgba(255,255,255,.02);
+      --bib-bg:#1E293B;--bib-text:#CBD5E1;
+      --ab-track:#1E293B;
+    }
+    /* LIGHT */
+    [data-theme="light"] {
+      --bg:#FAFAF8;--bg2:#F0F4FF;--surface:#FFFFFF;--surface2:#F1F5F9;
+      --text:#1A1A1A;--text2:#555;--text3:#888;
+      --accent:#1D4ED8;--accent-l:#DBEAFE;--accent-d:#1E3A8A;
+      --border:#E5E5E5;--border2:#D1D5DB;
+      --hero-grad:linear-gradient(180deg,#F0F4FF 0%,#FAFAF8 100%);
+      --hero-orb1:rgba(29,78,216,.06);--hero-orb2:rgba(5,150,105,.05);
+      --card-hover:rgba(29,78,216,.08);
+      --nav-bg:rgba(250,250,248,.92);
+      --table-head:#F8FAFC;--table-hover:#FAFBFF;
+      --tldr-bg:linear-gradient(135deg,#F0F4FF,#F5F3FF);
+      --tldr-border:rgba(99,102,241,.25);
+      --clinical-bg:linear-gradient(135deg,#ECFDF5,#F0FDF4);
+      --viz-bg:#0F172A;--viz-border:#1E293B;--viz-surface:#1E293B;--viz-surface2:#334155;
+      --viz-text:#CBD5E1;--viz-text2:#94A3B8;--viz-text3:#64748B;
+      --fig-bg:#F8FAFC;--fig-dash:#E5E5E5;--fig-hatch:rgba(0,0,0,.015);
+      --bib-bg:#1E293B;--bib-text:#CBD5E1;
+      --ab-track:#F1F5F9;
+    }
+
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
 
     /* HERO */
-    .hero{position:relative;padding:80px 24px 56px;text-align:center;background:linear-gradient(180deg,#F0F4FF,var(--bg));border-bottom:1px solid var(--border);overflow:hidden}
-    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(29,78,216,.06) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(5,150,105,.05) 0%,transparent 50%);pointer-events:none}
+    .hero{position:relative;padding:80px 24px 56px;text-align:center;background:var(--hero-grad);border-bottom:1px solid var(--border);overflow:hidden;transition:background .3s}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,var(--hero-orb1) 0%,transparent 50%),radial-gradient(circle at 80% 70%,var(--hero-orb2) 0%,transparent 50%);pointer-events:none}
     .venue{display:inline-block;font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-l);padding:6px 16px;border-radius:100px;margin-bottom:28px;position:relative}
-    .hero h1{font-family:var(--serif);font-size:clamp(28px,4.5vw,48px);font-weight:700;line-height:1.2;max-width:800px;margin:0 auto 24px;letter-spacing:-.02em;position:relative}
+    .hero h1{font-family:var(--serif);font-weight:700;line-height:1.15;max-width:860px;margin:0 auto 24px;letter-spacing:-.02em;position:relative;
+      font-size:clamp(26px, 2.5vw + 16px, 50px);
+      word-break:normal;overflow-wrap:normal;
+    }
     .hl{background:linear-gradient(120deg,var(--accent),#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .authors{font-size:16px;color:var(--text2);max-width:700px;margin:0 auto 8px;line-height:1.8;position:relative}
-    .authors a{color:var(--text);text-decoration:none;font-weight:500;border-bottom:1px solid var(--border);transition:border-color .2s}
+    .authors{font-size:16px;color:var(--text2);max-width:720px;margin:0 auto 8px;line-height:1.8;position:relative}
+    .authors a{color:var(--text);text-decoration:none;font-weight:500;border-bottom:1px solid var(--border2);transition:border-color .2s,color .2s}
     .authors a:hover{border-color:var(--accent);color:var(--accent)}
     .authors sup{font-size:11px;color:var(--accent);font-weight:600}
     .affil{font-size:14px;color:var(--text3);margin-bottom:32px;position:relative}
     .affil sup{font-size:10px;color:var(--accent);font-weight:600}
 
-    /* BUTTONS */
     .btn-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1.5px solid var(--border);color:var(--text);background:var(--surface)}
-    .btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:0 4px 12px rgba(29,78,216,.12)}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;border:1.5px solid var(--border2);color:var(--text);background:var(--surface)}
+    .btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:0 4px 12px rgba(99,102,241,.15)}
     .btn-p{background:var(--accent);color:#fff;border-color:var(--accent)}
     .btn-p:hover{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
     .btn svg{width:18px;height:18px;flex-shrink:0}
 
+    /* THEME TOGGLE */
+    .theme-toggle{position:fixed;top:16px;right:16px;z-index:200;width:40px;height:40px;border-radius:10px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+    .theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+    .theme-toggle svg{width:20px;height:20px;transition:transform .3s}
+    .theme-toggle:hover svg{transform:rotate(30deg)}
+    [data-theme="dark"] .theme-toggle .sun{display:block}
+    [data-theme="dark"] .theme-toggle .moon{display:none}
+    [data-theme="light"] .theme-toggle .sun{display:none}
+    [data-theme="light"] .theme-toggle .moon{display:block}
+
     /* NAV */
-    .nav{position:sticky;top:0;z-index:100;background:rgba(250,250,248,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;-webkit-overflow-scrolling:touch;transition:background .3s}
     .nav-inner{display:flex;gap:0;max-width:var(--maxw-w);margin:0 auto;overflow-x:auto;scrollbar-width:none}
     .nav-inner::-webkit-scrollbar{display:none}
     .nav a{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text3);text-decoration:none;padding:12px 16px;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
     .nav a:hover{color:var(--text)}
     .nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
 
-    /* LAYOUT */
     .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
     .container-w{max-width:var(--maxw-w);margin:0 auto;padding:0 24px}
     section{padding:60px 0}
@@ -51,106 +110,88 @@
     h2{font-family:var(--serif);font-size:28px;font-weight:600;margin-bottom:20px;letter-spacing:-.01em}
     p+p{margin-top:16px}
 
-    /* TLDR */
-    .tldr{background:linear-gradient(135deg,#F0F4FF,#F5F3FF);border:1px solid #C7D2FE;border-radius:12px;padding:28px 32px}
+    .tldr{background:var(--tldr-bg);border:1px solid var(--tldr-border);border-radius:12px;padding:28px 32px;transition:background .3s}
     .tldr h3{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
     .tldr p{font-size:15px;color:var(--text2);line-height:1.75}
 
-    /* FIGURES */
     .figure{margin:40px 0}
-    .fig-ph{width:100%;min-height:320px;background:#F8FAFC;border:2px dashed var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text3);font-size:14px;padding:40px;text-align:center;position:relative;overflow:hidden}
-    .fig-ph::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(0,0,0,.015) 20px,rgba(0,0,0,.015) 21px);pointer-events:none}
+    .fig-ph{width:100%;min-height:320px;background:var(--fig-bg);border:2px dashed var(--fig-dash);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text3);font-size:14px;padding:40px;text-align:center;position:relative;overflow:hidden;transition:background .3s}
+    .fig-ph::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 20px,var(--fig-hatch) 20px,var(--fig-hatch) 21px);pointer-events:none}
     .fig-ph .phi{width:48px;height:48px;border-radius:12px;background:var(--accent-l);display:flex;align-items:center;justify-content:center}
     .fig-ph .phi svg{width:24px;height:24px;color:var(--accent)}
     .fig-ph .phl{font-weight:600;color:var(--text2)}
-    .fig-ph .phf{font-family:var(--mono);font-size:12px;background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:6px;color:var(--accent)}
+    .fig-ph .phf{font-family:var(--mono);font-size:12px;background:var(--surface);border:1px solid var(--border2);padding:4px 12px;border-radius:6px;color:var(--accent)}
     .figcap{margin-top:12px;font-size:14px;color:var(--text3);text-align:center;line-height:1.6}
     .figcap strong{color:var(--text2)}
 
-    /* IDEA GRID */
     .igrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin:32px 0}
     .icard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;transition:all .2s}
-    .icard:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(29,78,216,.08)}
+    .icard:hover{border-color:var(--accent);box-shadow:0 4px 16px var(--card-hover)}
     .icard .ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:20px}
     .icard h3{font-size:15px;font-weight:700;margin-bottom:8px}
     .icard p{font-size:14px;color:var(--text2);line-height:1.65}
-    .icard.st .ic{background:#DBEAFE}
-    .icard.ts .ic{background:#FEE2E2}
-    .icard.rt .ic{background:#D1FAE5}
-    .icard.mc .ic{background:#FEF3C7}
+    .icard.st .ic{background:rgba(37,99,235,.15)}
+    .icard.ts .ic{background:rgba(220,38,38,.15)}
+    .icard.rt .ic{background:rgba(5,150,105,.15)}
+    .icard.mc .ic{background:rgba(251,191,36,.15)}
 
-    /* ═══ VIZ ═══ */
-    .vizwrap{background:#0F172A;border-radius:16px;overflow:hidden;margin:32px 0;border:1px solid #1E293B}
-    .scstrip{display:flex;justify-content:center;gap:12px;padding:14px 24px;flex-wrap:wrap;border-bottom:1px solid #1E293B}
-    .scstrip .sl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#64748B;padding:6px 0}
-    .scbtn{font-family:var(--sans);font-size:13px;font-weight:600;padding:6px 16px;border-radius:8px;border:1.5px solid #334155;background:transparent;color:#94A3B8;cursor:pointer;transition:all .25s}
+    /* ═══ VIZ (always dark) ═══ */
+    .vizwrap{background:var(--viz-bg);border-radius:16px;overflow:hidden;margin:32px 0;border:1px solid var(--viz-border)}
+    .scstrip{display:flex;justify-content:center;gap:12px;padding:14px 24px;flex-wrap:wrap;border-bottom:1px solid var(--viz-border)}
+    .scstrip .sl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--viz-text3);padding:6px 0}
+    .scbtn{font-family:var(--sans);font-size:13px;font-weight:600;padding:6px 16px;border-radius:8px;border:1.5px solid var(--viz-surface2);background:transparent;color:var(--viz-text2);cursor:pointer;transition:all .25s}
     .scbtn:hover{border-color:#475569;color:#E2E8F0}
     .scbtn.on{border-color:var(--dual);background:rgba(5,150,105,.15);color:#6EE7B7}
-
-    .vizctrl{display:flex;align-items:center;gap:12px;padding:12px 24px;border-bottom:1px solid #1E293B;flex-wrap:wrap}
-    .vizctrl .vl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#64748B}
-    .vtgrp{display:flex;background:#1E293B;border-radius:8px;padding:3px;gap:2px}
-    .vtab{font-family:var(--sans);font-size:13px;font-weight:600;padding:6px 16px;border-radius:6px;border:none;cursor:pointer;transition:all .25s;background:transparent;color:#94A3B8}
+    .vizctrl{display:flex;align-items:center;gap:12px;padding:12px 24px;border-bottom:1px solid var(--viz-border);flex-wrap:wrap}
+    .vizctrl .vl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--viz-text3)}
+    .vtgrp{display:flex;background:var(--viz-surface);border-radius:8px;padding:3px;gap:2px}
+    .vtab{font-family:var(--sans);font-size:13px;font-weight:600;padding:6px 16px;border-radius:6px;border:none;cursor:pointer;transition:all .25s;background:transparent;color:var(--viz-text2)}
     .vtab:hover{color:#E2E8F0}
     .vtab.ast{background:var(--st);color:#fff}
     .vtab.ats{background:var(--ts);color:#fff}
     .vtab.adu{background:var(--dual);color:#fff}
-    .vplay{margin-left:auto;font-family:var(--mono);font-size:12px;padding:6px 16px;border-radius:6px;border:1px solid #334155;background:#1E293B;color:#94A3B8;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+    .vplay{margin-left:auto;font-family:var(--mono);font-size:12px;padding:6px 16px;border-radius:6px;border:1px solid var(--viz-surface2);background:var(--viz-surface);color:var(--viz-text2);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
     .vplay:hover{border-color:#475569;color:#E2E8F0}
     .vplay svg{width:14px;height:14px}
-
     .vizcanvas{padding:28px 24px 24px;min-height:580px;position:relative}
     .vsteps{display:flex;justify-content:center;gap:8px;margin-bottom:24px}
-    .vdot{width:8px;height:8px;border-radius:50%;background:#334155;transition:all .4s}
-    .vdot.on{background:#94A3B8;transform:scale(1.5)}
+    .vdot{width:8px;height:8px;border-radius:50%;background:var(--viz-surface2);transition:all .4s}
+    .vdot.on{background:var(--viz-text2);transform:scale(1.5)}
     .vdot.dn{background:#475569}
-
     .pipe{display:flex;flex-direction:column;align-items:center}
     .pr{display:flex;align-items:center;justify-content:center;gap:16px;width:100%;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
     .pr.v{opacity:1;transform:translateY(0)}
     .pa{display:flex;justify-content:center;padding:8px 0;opacity:0;transition:opacity .4s .1s}
     .pa.v{opacity:1}
-    .pa svg{width:20px;height:20px;color:#334155}
+    .pa svg{width:20px;height:20px;color:var(--viz-surface2)}
     .psplit{display:flex;justify-content:center;gap:200px;padding:10px 0;opacity:0;transition:opacity .4s .1s}
     .psplit.v{opacity:1}
     @media(max-width:700px){.psplit{gap:80px}}
-
     .erow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-    .etok{width:56px;height:56px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;background:#1E293B;transition:all .4s;border:2px solid transparent}
+    .etok{width:56px;height:56px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;background:var(--viz-surface);transition:all .4s;border:2px solid transparent}
     .etok .el{font-family:var(--mono);font-size:9px;font-weight:500;margin-top:2px;opacity:.8}
     .etok.head{color:#FBBF24}.etok.face{color:#F472B6}.etok.lhand{color:#60A5FA}.etok.rhand{color:#34D399}.etok.torso{color:#A78BFA}.etok.lower{color:#FB923C}
-    .etok.dom{border-color:currentColor;box-shadow:0 0 12px rgba(255,255,255,.1)}
-
+    .etok.dom{border-color:currentColor;box-shadow:0 0 14px rgba(255,255,255,.12)}
     .pb{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-family:var(--mono);font-size:13px;font-weight:500;border:1.5px solid;transition:all .4s;position:relative}
     .pb.sp{border-color:rgba(37,99,235,.4);background:rgba(37,99,235,.1);color:#93C5FD}
     .pb.tp{border-color:rgba(220,38,38,.4);background:rgba(220,38,38,.1);color:#FCA5A5}
-    .pb.ne{border-color:#475569;background:rgba(71,85,105,.15);color:#CBD5E1}
+    .pb.ne{border-color:#475569;background:rgba(71,85,105,.15);color:var(--viz-text)}
     .pb.se{border-color:rgba(168,85,247,.4);background:rgba(168,85,247,.1);color:#C4B5FD}
     .pb.gn{border-color:rgba(5,150,105,.4);background:rgba(5,150,105,.1);color:#6EE7B7}
     .pi{font-size:16px}
-
-    /* Processing mini-animations */
     .proc-mini{position:absolute;right:-8px;top:50%;transform:translateY(-50%) translateX(100%);opacity:0;transition:opacity .4s;pointer-events:none}
     .proc-mini.show{opacity:1}
-
-    /* Spatial-T mini: grid of dots with connecting lines */
     .spatial-mini{width:60px;height:48px}
     .spatial-mini circle{fill:#93C5FD;opacity:.6}
     .spatial-mini line{stroke:#93C5FD;stroke-width:1;opacity:0}
-    .spatial-mini.anim line{animation:lineFlash .8s ease forwards}
-    @keyframes lineFlash{0%{opacity:0;stroke-dashoffset:20}50%{opacity:.7}100%{opacity:.3;stroke-dashoffset:0}}
-    .spatial-mini line:nth-child(2){animation-delay:.1s}
-    .spatial-mini line:nth-child(3){animation-delay:.2s}
-    .spatial-mini line:nth-child(4){animation-delay:.3s}
-    .spatial-mini line:nth-child(5){animation-delay:.35s}
-
-    /* Temporal-T mini: timeline scan */
+    .spatial-mini.anim line{animation:lf .8s ease forwards}
+    @keyframes lf{0%{opacity:0;stroke-dashoffset:20}50%{opacity:.7}100%{opacity:.3;stroke-dashoffset:0}}
+    .spatial-mini line:nth-child(2){animation-delay:.1s}.spatial-mini line:nth-child(3){animation-delay:.2s}.spatial-mini line:nth-child(4){animation-delay:.3s}.spatial-mini line:nth-child(5){animation-delay:.35s}
     .temporal-mini{width:60px;height:48px}
     .temporal-mini rect.frame{fill:#FCA5A5;opacity:.2;rx:2}
     .temporal-mini rect.scan{fill:#FCA5A5;opacity:.8;rx:2}
-    .temporal-mini.anim rect.scan{animation:tScan 1.2s ease-in-out forwards}
-    @keyframes tScan{0%{x:2}50%{x:28}100%{x:48}}
-
+    .temporal-mini.anim rect.scan{animation:ts 1.2s ease-in-out forwards}
+    @keyframes ts{0%{x:2}50%{x:28}100%{x:48}}
     .dpaths{display:flex;justify-content:center;gap:40px;width:100%}
     @media(max-width:700px){.dpaths{gap:16px;flex-direction:column;align-items:center}}
     .pcol{display:flex;flex-direction:column;align-items:center;gap:0;min-width:190px;padding:16px;border-radius:12px;border:1.5px solid transparent;transition:all .4s}
@@ -160,70 +201,64 @@
     .plbl.st{background:rgba(37,99,235,.2);color:#93C5FD}
     .plbl.ts{background:rgba(220,38,38,.2);color:#FCA5A5}
     .iarr{padding:6px 0;display:flex;justify-content:center}
-    .iarr svg{width:16px;height:16px;color:#334155}
-
-    /* Routing chips */
+    .iarr svg{width:16px;height:16px;color:var(--viz-surface2)}
     .rrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-    .rchip{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;border-radius:8px;background:#1E293B;min-width:64px;transition:all .5s}
+    .rchip{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;border-radius:8px;background:var(--viz-surface);min-width:64px;transition:all .5s}
     .rchip .re{font-size:16px}
-    .rchip .rb{width:48px;height:6px;border-radius:3px;background:#334155;overflow:hidden;display:flex}
-    .rchip .rb .rs{height:100%;background:var(--st);transition:width .8s ease}
-    .rchip .rb .rt{height:100%;background:var(--ts);transition:width .8s ease}
-    .rchip .rp{font-family:var(--mono);font-size:9px;color:#64748B;display:flex;gap:4px}
-    .rchip .rp .ps{color:#60A5FA}
-    .rchip .rp .pt{color:#F87171}
-
-    /* Prediction scores */
-    .pred-scores{display:flex;flex-direction:column;gap:6px;min-width:280px;padding:16px 20px;border-radius:10px;background:#1E293B;border:1px solid #334155}
-    .pred-scores .ps-title{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#64748B;margin-bottom:4px}
-    .ps-row{display:flex;align-items:center;gap:10px}
-    .ps-row .ps-label{font-family:var(--sans);font-size:13px;font-weight:600;color:#CBD5E1;width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .ps-row .ps-bar-track{flex:1;height:10px;background:#334155;border-radius:5px;overflow:hidden}
-    .ps-row .ps-bar-fill{height:100%;border-radius:5px;transition:width .8s ease,background .4s}
-    .ps-row .ps-pct{font-family:var(--mono);font-size:12px;font-weight:600;width:40px;text-align:right;transition:color .4s}
-    .ps-row.top .ps-label{color:#6EE7B7}
-    .ps-row.top .ps-bar-fill{background:var(--dual)}
-    .ps-row.top .ps-pct{color:#6EE7B7}
-    .ps-row:not(.top) .ps-bar-fill{background:#475569}
-    .ps-row:not(.top) .ps-pct{color:#64748B}
-
-    .vizann{text-align:center;padding:16px 24px 20px;font-size:13px;color:#64748B;line-height:1.7;border-top:1px solid #1E293B}
-    .vizann strong{color:#94A3B8}
-
-    @keyframes pulseB{0%,100%{box-shadow:0 0 0 transparent}50%{box-shadow:0 0 20px 4px rgba(96,165,250,.35)}}
-    @keyframes pulseR{0%,100%{box-shadow:0 0 0 transparent}50%{box-shadow:0 0 20px 4px rgba(248,113,113,.35)}}
-    .pB{animation:pulseB 1s ease infinite}
-    .pR{animation:pulseR 1s ease infinite}
+    .rchip .rb{width:48px;height:6px;border-radius:3px;background:var(--viz-surface2);overflow:hidden;display:flex}
+    .rchip .rb .rs{height:100%;background:var(--st);transition:width .8s}
+    .rchip .rb .rt{height:100%;background:var(--ts);transition:width .8s}
+    .rchip .rp{font-family:var(--mono);font-size:9px;color:var(--viz-text3);display:flex;gap:4px}
+    .rchip .rp .ps{color:#60A5FA}.rchip .rp .pt{color:#F87171}
+    .pred-scores{display:flex;flex-direction:column;gap:6px;min-width:280px;padding:16px 20px;border-radius:10px;background:var(--viz-surface);border:1px solid var(--viz-surface2)}
+    .pred-scores .pst{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--viz-text3);margin-bottom:4px}
+    .psr{display:flex;align-items:center;gap:10px}
+    .psr .psl{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--viz-text);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .psr .psbt{flex:1;height:10px;background:var(--viz-surface2);border-radius:5px;overflow:hidden}
+    .psr .psbf{height:100%;border-radius:5px;transition:width .8s,background .4s}
+    .psr .pspc{font-family:var(--mono);font-size:12px;font-weight:600;width:40px;text-align:right;transition:color .4s}
+    .psr.top .psl{color:#6EE7B7}.psr.top .psbf{background:var(--dual)}.psr.top .pspc{color:#6EE7B7}
+    .psr:not(.top) .psbf{background:#475569}.psr:not(.top) .pspc{color:var(--viz-text3)}
+    .vizann{text-align:center;padding:16px 24px 20px;font-size:13px;color:var(--viz-text3);line-height:1.7;border-top:1px solid var(--viz-border)}
+    .vizann strong{color:var(--viz-text2)}
+    @keyframes pB{0%,100%{box-shadow:0 0 0 transparent}50%{box-shadow:0 0 20px 4px rgba(96,165,250,.35)}}
+    @keyframes pR{0%,100%{box-shadow:0 0 0 transparent}50%{box-shadow:0 0 20px 4px rgba(248,113,113,.35)}}
+    .pB{animation:pB 1s ease infinite}.pR{animation:pR 1s ease infinite}
 
     /* RESULTS */
-    .twrap{overflow-x:auto;margin:24px 0;border-radius:12px;border:1px solid var(--border);background:var(--surface)}
+    .twrap{overflow-x:auto;margin:24px 0;border-radius:12px;border:1px solid var(--border);background:var(--surface);transition:background .3s}
     table{width:100%;border-collapse:collapse;font-size:14px}
-    thead{background:#F8FAFC}
+    thead{background:var(--table-head)}
     th{font-weight:600;text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);font-size:13px;color:var(--text2);white-space:nowrap}
-    td{padding:10px 16px;border-bottom:1px solid #F1F5F9;white-space:nowrap}
+    td{padding:10px 16px;border-bottom:1px solid var(--border);white-space:nowrap}
     tbody tr:last-child td{border-bottom:none}
-    tbody tr:hover{background:#FAFBFF}
-    tr.ours{background:linear-gradient(90deg,rgba(5,150,105,.06),rgba(5,150,105,.02));font-weight:600}
+    tbody tr:hover{background:var(--table-hover)}
+    tr.ours{background:rgba(5,150,105,.06);font-weight:600}
     .best{color:var(--dual);font-weight:700}
     .mtag{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:4px;margin-left:6px}
-    .tc{background:#DBEAFE;color:#1D4ED8}.tg{background:#FCE7F3;color:#BE185D}.tt{background:#FEF3C7;color:#92400E}
+    .tc{background:rgba(37,99,235,.15);color:#60A5FA}
+    .tg{background:rgba(236,72,153,.15);color:#F472B6}
+    .tt{background:rgba(251,191,36,.15);color:#FBBF24}
+    [data-theme="light"] .tc{background:#DBEAFE;color:#1D4ED8}
+    [data-theme="light"] .tg{background:#FCE7F3;color:#BE185D}
+    [data-theme="light"] .tt{background:#FEF3C7;color:#92400E}
 
     .abgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:24px 0}
     @media(max-width:700px){.abgrid{grid-template-columns:1fr}}
-    .abblk{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px}
+    .abblk{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;transition:background .3s}
     .abblk h4{font-size:14px;font-weight:700;margin-bottom:16px}
     .abr{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px}
     .abr .abl{width:120px;flex-shrink:0;text-align:right;color:var(--text2);font-weight:500}
-    .abr .abt{flex:1;height:22px;background:#F1F5F9;border-radius:6px;overflow:hidden}
+    .abr .abt{flex:1;height:22px;background:var(--ab-track);border-radius:6px;overflow:hidden}
     .abr .abf{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;font-weight:700;color:#fff;transition:width .8s}
     .bb{background:#94A3B8}.bc{background:var(--st)}.bf{background:var(--dual)}
 
-    .ccall{border-left:4px solid var(--dual);background:linear-gradient(135deg,#ECFDF5,#F0FDF4);border-radius:0 12px 12px 0;padding:24px 28px;margin:24px 0}
+    .ccall{border-left:4px solid var(--dual);background:var(--clinical-bg);border-radius:0 12px 12px 0;padding:24px 28px;margin:24px 0;transition:background .3s}
     .ccall h4{color:var(--dual);font-size:15px;font-weight:700;margin-bottom:8px}
-    .ccall p{font-size:14px;color:#374151;line-height:1.7}
+    .ccall p{font-size:14px;color:var(--text2);line-height:1.7}
 
-    .bib{position:relative;background:#1E293B;border-radius:12px;padding:24px 28px;margin:20px 0}
-    .bib pre{font-family:var(--mono);font-size:13px;line-height:1.7;color:#CBD5E1;overflow-x:auto;white-space:pre}
+    .bib{position:relative;background:var(--bib-bg);border-radius:12px;padding:24px 28px;margin:20px 0}
+    .bib pre{font-family:var(--mono);font-size:13px;line-height:1.7;color:var(--bib-text);overflow-x:auto;white-space:pre}
     .bib .cbtn{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#94A3B8;font-family:var(--mono);font-size:12px;padding:6px 14px;border-radius:6px;cursor:pointer;transition:all .2s}
     .bib .cbtn:hover{background:rgba(255,255,255,.2);color:#E2E8F0}
 
@@ -243,13 +278,19 @@
 </head>
 <body>
 
+<!-- THEME TOGGLE -->
+<button class="theme-toggle" id="themeBtn" aria-label="Toggle theme">
+  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+
 <!-- HERO -->
 <header class="hero">
   <div class="venue">IEEE FG 2026</div>
-  <h1><span class="hl">Micro-DualNet:</span> Dual-Path Spatio&ndash;Temporal Network for Micro-Action Recognition</h1>
+  <h1><span class="hl">Micro-DualNet:</span> Dual-Path Spatio-Temporal Network for Micro-Action Recognition</h1>
   <div class="authors">
-    <a href="#">Naga VS Raviteja Chappa</a><sup>1</sup>,
-    <a href="#">Evangelos Sariyanidi</a><sup>1</sup>,
+    <a href="https://nchappa.github.io">Naga VS Raviteja Chappa</a><sup>1</sup>,
+    <a href="http://sariyanidi.com/">Evangelos Sariyanidi</a><sup>1</sup>,
     <a href="#">Lisa Yankowitz</a><sup>1</sup>,
     <a href="#">Gokul Nair</a><sup>1</sup>,<br>
     <a href="#">Casey J. Zampella</a><sup>1,2</sup>,
@@ -262,224 +303,114 @@
   </div>
   <div class="btn-row">
     <a href="#" class="btn btn-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Paper</a>
-    <a href="#" class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>Code</a>
+    <a href="https://github.com/compsygroup/Micro-DualNet" class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>Code</a>
   </div>
 </header>
 
-<!-- STICKY NAV -->
-<nav class="nav" id="stickyNav">
-  <div class="nav-inner">
-    <a href="#sec-tldr">Overview</a>
-    <a href="#sec-idea">Key Idea</a>
-    <a href="#sec-method">Method</a>
-    <a href="#sec-arch">Architecture</a>
-    <a href="#sec-results">Results</a>
-    <a href="#sec-qual">Qualitative</a>
-    <a href="#sec-clinical">Clinical</a>
-    <a href="#sec-cite">Citation</a>
-  </div>
-</nav>
+<!-- NAV -->
+<nav class="nav" id="stickyNav"><div class="nav-inner">
+  <a href="#sec-tldr">Overview</a><a href="#sec-idea">Key Idea</a><a href="#sec-method">Method</a><a href="#sec-arch">Architecture</a><a href="#sec-results">Results</a><a href="#sec-qual">Qualitative</a><a href="#sec-clinical">Clinical</a><a href="#sec-cite">Citation</a>
+</div></nav>
 
 <!-- TL;DR -->
-<section id="sec-tldr">
-  <div class="container"><div class="fu">
-    <div class="tldr">
-      <h3>TL;DR</h3>
-      <p>Micro-actions like head scratches and finger taps need different processing depending on whether they're defined by <strong>spatial pose</strong> or <strong>temporal rhythm</strong>. Micro-DualNet processes body-part features through parallel <strong style="color:var(--st)">Spatial&rarr;Temporal</strong> and <strong style="color:var(--ts)">Temporal&rarr;Spatial</strong> paths, with learned per-entity routing. State-of-the-art on iMiGUE (<strong>76.88%</strong>) and competitive on MA-52 (<strong>65.10%</strong>), with clinical validation on 290 individuals.</p>
-    </div>
-  </div></div>
-</section>
+<section id="sec-tldr"><div class="container"><div class="fu">
+  <div class="tldr"><h3>TL;DR</h3><p>Micro-actions like head scratches and finger taps need different processing depending on whether they're defined by <strong>spatial pose</strong> or <strong>temporal rhythm</strong>. Micro-DualNet processes body-part features through parallel <strong style="color:var(--st)">Spatial&rarr;Temporal</strong> and <strong style="color:var(--ts)">Temporal&rarr;Spatial</strong> paths, with learned per-entity routing. State-of-the-art on iMiGUE (<strong>76.88%</strong>) and competitive on MA-52 (<strong>65.10%</strong>), with clinical validation on 290 individuals.</p></div>
+</div></div></section>
 
 <!-- KEY IDEA -->
-<section id="sec-idea">
-  <div class="container"><div class="fu">
-    <div class="slabel">Key Idea</div>
-    <h2>Why Two Processing Orders?</h2>
-    <p>"Covering face" is defined by its final spatial configuration. "Leg shaking" is characterized by repetitive temporal rhythm. No single decomposition handles both.</p>
-  </div>
+<section id="sec-idea"><div class="container">
+  <div class="fu"><div class="slabel">Key Idea</div><h2>Why Two Processing Orders?</h2><p>"Covering face" is defined by its final spatial configuration. "Leg shaking" is characterized by repetitive temporal rhythm. No single decomposition handles both.</p></div>
   <div class="igrid fu">
     <div class="icard st"><div class="ic">&#x1F537;</div><h3>Spatial &rarr; Temporal</h3><p>Spatial arrangements first, then temporal evolution. Best for position-defined actions.</p></div>
     <div class="icard ts"><div class="ic">&#x1F536;</div><h3>Temporal &rarr; Spatial</h3><p>Motion patterns first, then spatial relationships. Best for rhythm-defined actions.</p></div>
     <div class="icard rt"><div class="ic">&#x1F500;</div><h3>Entity-Level Routing</h3><p>Each body part learns its own optimal ST/TS blend via lightweight gating.</p></div>
     <div class="icard mc"><div class="ic">&#x1F517;</div><h3>MAC Loss</h3><p>Cross-path coherence via entity-aware contrastive learning.</p></div>
-  </div></div>
-</section>
+  </div>
+</div></section>
 
 <!-- METHOD -->
-<section id="sec-method">
-  <div class="container-w"><div class="fu">
-    <div class="slabel">Method</div>
-    <h2>How Micro-DualNet Works</h2>
-    <p>Select an action, then switch views to see how prediction confidence changes. Watch how each body part gets routed differently.</p>
-  </div>
+<section id="sec-method"><div class="container-w">
+  <div class="fu"><div class="slabel">Method</div><h2>How Micro-DualNet Works</h2><p>Select an action, then switch views to see how prediction confidence changes. Watch how each body part gets routed differently.</p></div>
   <div class="vizwrap fu" id="vizWrap">
-    <div class="scstrip">
-      <span class="sl">Action:</span>
+    <div class="scstrip"><span class="sl">Action:</span>
       <button class="scbtn on" data-sc="cover_face">&#x1F926; Covering Face</button>
       <button class="scbtn" data-sc="leg_shake">&#x1F9B5; Leg Shaking</button>
       <button class="scbtn" data-sc="rub_hands">&#x1F932; Rubbing Hands</button>
     </div>
-    <div class="vizctrl">
-      <span class="vl">View:</span>
-      <div class="vtgrp">
-        <button class="vtab adu" data-vw="dual">Dual Path</button>
-        <button class="vtab" data-vw="st">ST Only</button>
-        <button class="vtab" data-vw="ts">TS Only</button>
-      </div>
+    <div class="vizctrl"><span class="vl">View:</span>
+      <div class="vtgrp"><button class="vtab adu" data-vw="dual">Dual Path</button><button class="vtab" data-vw="st">ST Only</button><button class="vtab" data-vw="ts">TS Only</button></div>
       <button class="vplay" id="playBtn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>Replay</button>
     </div>
     <div class="vizcanvas">
       <div class="vsteps" id="vsteps"></div>
       <div class="pipe" id="pipe">
-
-        <!-- Step 0: CNN -->
         <div class="pr" data-s="0"><div class="pb ne"><span class="pi">&#x1F39E;</span> Video Frames &rarr; ResNet-101 + TSM</div></div>
         <div class="pa" data-s="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
-
-        <!-- Step 1: SEM -->
         <div class="pr" data-s="1"><div class="pb se"><span class="pi">&#x1F9B4;</span> Spatial Entity Module &mdash; Keypoint-guided cropping</div></div>
         <div class="pa" data-s="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
-        <div class="pr" data-s="1" id="rowEnt">
-          <div class="erow" id="erow">
-            <div class="etok head"><span>&#x1F9E0;</span><span class="el">Head</span></div>
-            <div class="etok face"><span>&#x1F636;</span><span class="el">Face</span></div>
-            <div class="etok lhand"><span>&#x1F91A;</span><span class="el">L.Hand</span></div>
-            <div class="etok rhand"><span>&#x270B;</span><span class="el">R.Hand</span></div>
-            <div class="etok torso"><span>&#x1F464;</span><span class="el">Torso</span></div>
-            <div class="etok lower"><span>&#x1F9B5;</span><span class="el">Lower</span></div>
-          </div>
-        </div>
-
-        <!-- Step 2: Dual paths -->
+        <div class="pr" data-s="1"><div class="erow" id="erow">
+          <div class="etok head"><span>&#x1F9E0;</span><span class="el">Head</span></div>
+          <div class="etok face"><span>&#x1F636;</span><span class="el">Face</span></div>
+          <div class="etok lhand"><span>&#x1F91A;</span><span class="el">L.Hand</span></div>
+          <div class="etok rhand"><span>&#x270B;</span><span class="el">R.Hand</span></div>
+          <div class="etok torso"><span>&#x1F464;</span><span class="el">Torso</span></div>
+          <div class="etok lower"><span>&#x1F9B5;</span><span class="el">Lower</span></div>
+        </div></div>
         <div class="psplit" data-s="2">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--st)"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--ts)"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
         </div>
-        <div class="pr" data-s="2" id="rowDual">
-          <div class="dpaths">
-            <div class="pcol stc" id="stCol">
-              <div class="plbl st">ST Path</div>
-              <div class="pb sp" id="st1" style="position:relative"><span class="pi">&#x1F4D0;</span> Spatial-T
-                <div class="proc-mini" id="miniSp1">
-                  <svg class="spatial-mini" viewBox="0 0 60 48">
-                    <line x1="10" y1="10" x2="30" y2="8" stroke-dasharray="20"/>
-                    <line x1="30" y1="8" x2="50" y2="12" stroke-dasharray="20"/>
-                    <line x1="10" y1="10" x2="20" y2="36" stroke-dasharray="20"/>
-                    <line x1="30" y1="8" x2="40" y2="36" stroke-dasharray="20"/>
-                    <line x1="20" y1="36" x2="40" y2="36" stroke-dasharray="20"/>
-                    <circle cx="10" cy="10" r="4"/><circle cx="30" cy="8" r="4"/><circle cx="50" cy="12" r="4"/>
-                    <circle cx="20" cy="36" r="4"/><circle cx="40" cy="36" r="4"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="iarr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
-              <div class="pb tp" id="st2" style="position:relative"><span class="pi">&#x23F1;</span> Temporal-T
-                <div class="proc-mini" id="miniTp1">
-                  <svg class="temporal-mini" viewBox="0 0 60 48">
-                    <rect class="frame" x="2" y="14" width="8" height="20"/>
-                    <rect class="frame" x="14" y="14" width="8" height="20"/>
-                    <rect class="frame" x="26" y="14" width="8" height="20"/>
-                    <rect class="frame" x="38" y="14" width="8" height="20"/>
-                    <rect class="frame" x="50" y="14" width="8" height="20"/>
-                    <rect class="scan" x="2" y="14" width="10" height="20"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div class="pcol tsc" id="tsCol">
-              <div class="plbl ts">TS Path</div>
-              <div class="pb tp" id="ts1" style="position:relative"><span class="pi">&#x23F1;</span> Temporal-T
-                <div class="proc-mini" id="miniTp2">
-                  <svg class="temporal-mini" viewBox="0 0 60 48">
-                    <rect class="frame" x="2" y="14" width="8" height="20"/>
-                    <rect class="frame" x="14" y="14" width="8" height="20"/>
-                    <rect class="frame" x="26" y="14" width="8" height="20"/>
-                    <rect class="frame" x="38" y="14" width="8" height="20"/>
-                    <rect class="frame" x="50" y="14" width="8" height="20"/>
-                    <rect class="scan" x="2" y="14" width="10" height="20"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="iarr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
-              <div class="pb sp" id="ts2" style="position:relative"><span class="pi">&#x1F4D0;</span> Spatial-T
-                <div class="proc-mini" id="miniSp2">
-                  <svg class="spatial-mini" viewBox="0 0 60 48">
-                    <line x1="10" y1="10" x2="30" y2="8" stroke-dasharray="20"/>
-                    <line x1="30" y1="8" x2="50" y2="12" stroke-dasharray="20"/>
-                    <line x1="10" y1="10" x2="20" y2="36" stroke-dasharray="20"/>
-                    <line x1="30" y1="8" x2="40" y2="36" stroke-dasharray="20"/>
-                    <line x1="20" y1="36" x2="40" y2="36" stroke-dasharray="20"/>
-                    <circle cx="10" cy="10" r="4"/><circle cx="30" cy="8" r="4"/><circle cx="50" cy="12" r="4"/>
-                    <circle cx="20" cy="36" r="4"/><circle cx="40" cy="36" r="4"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
+        <div class="pr" data-s="2"><div class="dpaths">
+          <div class="pcol stc" id="stCol"><div class="plbl st">ST Path</div>
+            <div class="pb sp" id="st1"><span class="pi">&#x1F4D0;</span> Spatial-T<div class="proc-mini" id="mSp1"><svg class="spatial-mini" viewBox="0 0 60 48"><line x1="10" y1="10" x2="30" y2="8" stroke-dasharray="20"/><line x1="30" y1="8" x2="50" y2="12" stroke-dasharray="20"/><line x1="10" y1="10" x2="20" y2="36" stroke-dasharray="20"/><line x1="30" y1="8" x2="40" y2="36" stroke-dasharray="20"/><line x1="20" y1="36" x2="40" y2="36" stroke-dasharray="20"/><circle cx="10" cy="10" r="4"/><circle cx="30" cy="8" r="4"/><circle cx="50" cy="12" r="4"/><circle cx="20" cy="36" r="4"/><circle cx="40" cy="36" r="4"/></svg></div></div>
+            <div class="iarr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
+            <div class="pb tp" id="st2"><span class="pi">&#x23F1;</span> Temporal-T<div class="proc-mini" id="mTp1"><svg class="temporal-mini" viewBox="0 0 60 48"><rect class="frame" x="2" y="14" width="8" height="20"/><rect class="frame" x="14" y="14" width="8" height="20"/><rect class="frame" x="26" y="14" width="8" height="20"/><rect class="frame" x="38" y="14" width="8" height="20"/><rect class="frame" x="50" y="14" width="8" height="20"/><rect class="scan" x="2" y="14" width="10" height="20"/></svg></div></div>
           </div>
-        </div>
-
-        <!-- Step 3: Routing -->
+          <div class="pcol tsc" id="tsCol"><div class="plbl ts">TS Path</div>
+            <div class="pb tp" id="ts1"><span class="pi">&#x23F1;</span> Temporal-T<div class="proc-mini" id="mTp2"><svg class="temporal-mini" viewBox="0 0 60 48"><rect class="frame" x="2" y="14" width="8" height="20"/><rect class="frame" x="14" y="14" width="8" height="20"/><rect class="frame" x="26" y="14" width="8" height="20"/><rect class="frame" x="38" y="14" width="8" height="20"/><rect class="frame" x="50" y="14" width="8" height="20"/><rect class="scan" x="2" y="14" width="10" height="20"/></svg></div></div>
+            <div class="iarr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
+            <div class="pb sp" id="ts2"><span class="pi">&#x1F4D0;</span> Spatial-T<div class="proc-mini" id="mSp2"><svg class="spatial-mini" viewBox="0 0 60 48"><line x1="10" y1="10" x2="30" y2="8" stroke-dasharray="20"/><line x1="30" y1="8" x2="50" y2="12" stroke-dasharray="20"/><line x1="10" y1="10" x2="20" y2="36" stroke-dasharray="20"/><line x1="30" y1="8" x2="40" y2="36" stroke-dasharray="20"/><line x1="20" y1="36" x2="40" y2="36" stroke-dasharray="20"/><circle cx="10" cy="10" r="4"/><circle cx="30" cy="8" r="4"/><circle cx="50" cy="12" r="4"/><circle cx="20" cy="36" r="4"/><circle cx="40" cy="36" r="4"/></svg></div></div>
+          </div>
+        </div></div>
         <div class="pa" data-s="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
         <div class="pr" data-s="3"><div class="pb gn"><span class="pi">&#x1F500;</span> Entity-Level Adaptive Routing</div></div>
         <div class="pr" data-s="3" style="margin-top:12px"><div class="rrow" id="rrow"></div></div>
-
-        <!-- Step 4: Prediction -->
         <div class="pa" data-s="4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></div>
-        <div class="pr" data-s="4" id="rowPred">
-          <div class="pred-scores" id="predScores"></div>
-        </div>
-
+        <div class="pr" data-s="4"><div class="pred-scores" id="predScores"></div></div>
       </div>
     </div>
     <div class="vizann" id="vizAnn"></div>
-  </div></div>
-</section>
+  </div>
+</div></section>
 
 <!-- ARCHITECTURE -->
-<section id="sec-arch">
-  <div class="container-w"><div class="fu">
-    <div class="slabel">Architecture</div><h2>Full Pipeline</h2>
-  </div>
-  <div class="figure fu">
-    <div class="fig-ph" style="min-height:380px">
-      <div class="phi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
-      <span class="phl">Architecture Diagram (Fig. 2)</span><span class="phf">assets/architecture.png</span>
-    </div>
-    <div class="figcap"><strong>Figure 2.</strong> Full architectural overview of Micro-DualNet.</div>
-  </div></div>
-</section>
+<section id="sec-arch"><div class="container-w">
+  <div class="fu"><div class="slabel">Architecture</div><h2>Full Pipeline</h2></div>
+  <div class="figure fu"><div class="fig-ph" style="min-height:380px"><div class="phi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><span class="phl">Architecture Diagram (Fig. 2)</span><span class="phf">assets/architecture.png</span></div><div class="figcap"><strong>Figure 2.</strong> Full architectural overview of Micro-DualNet.</div></div>
+</div></section>
 
-<!-- MOTIVATION FIGURE -->
-<section>
-  <div class="container-w"><div class="fu">
-    <div class="slabel">Motivation</div><h2>Motion-Based vs. Position-Based Micro-Actions</h2>
-  </div>
-  <div class="figure fu">
-    <div class="fig-ph"><div class="phi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="phl">Motivation Figure (Fig. 1)</span><span class="phf">assets/teaser_fig1.png</span></div>
-    <div class="figcap"><strong>Figure 1.</strong> Motion-based actions benefit from TS; position-based actions favor ST. Dual-path outperforms both.</div>
-  </div></div>
-</section>
+<!-- MOTIVATION -->
+<section><div class="container-w">
+  <div class="fu"><div class="slabel">Motivation</div><h2>Motion-Based vs. Position-Based Micro-Actions</h2></div>
+  <div class="figure fu"><div class="fig-ph"><div class="phi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="phl">Motivation Figure (Fig. 1)</span><span class="phf">assets/teaser_fig1.png</span></div><div class="figcap"><strong>Figure 1.</strong> Motion-based actions benefit from TS; position-based favor ST. Dual-path outperforms both.</div></div>
+</div></section>
 
 <!-- RESULTS -->
-<section id="sec-results">
-  <div class="container-w"><div class="fu">
-    <div class="slabel">Results</div><h2>Comparison with State-of-the-Art</h2>
-  </div>
-  <div class="twrap fu">
-    <table>
-      <thead><tr><th>Method</th><th>Type</th><th>MA-52 Top-1</th><th>MA-52 F1<sub>mean</sub></th><th>iMiGUE Top-1</th><th>iMiGUE Top-5</th></tr></thead>
-      <tbody>
-        <tr><td>TSM <span class="mtag tc">CNN</span></td><td>RGB</td><td>56.75%</td><td>61.39</td><td>61.10%</td><td>91.24%</td></tr>
-        <tr><td>MANet <span class="mtag tc">CNN</span></td><td>RGB+Pose</td><td>61.33%</td><td>65.59</td><td>62.54%</td><td>92.18%</td></tr>
-        <tr><td>SlowFast <span class="mtag tc">3D</span></td><td>RGB</td><td>59.60%</td><td>63.09</td><td>58.73%</td><td>89.41%</td></tr>
-        <tr><td>UniFormer <span class="mtag tt">Trans</span></td><td>RGB</td><td>58.89%</td><td>64.43</td><td>57.29%</td><td>89.95%</td></tr>
-        <tr><td>CTR-GCN <span class="mtag tg">GCN</span></td><td>Skeleton</td><td>52.61%</td><td>56.48</td><td>52.94%</td><td>89.76%</td></tr>
-        <tr><td>PoseConv3D <span class="mtag tg">GCN</span></td><td>Skeleton</td><td>63.52%</td><td>66.66</td><td>64.38%</td><td>93.52%</td></tr>
-        <tr><td>PCAN <span class="mtag tc">CNN</span></td><td>RGB+Pose</td><td>66.74%</td><td>69.97</td><td>&ndash;</td><td>&ndash;</td></tr>
-        <tr class="ours"><td>Micro-DualNet (Ours)</td><td>RGB+Pose</td><td class="best">65.10%</td><td class="best">68.72</td><td class="best">76.88%</td><td class="best">96.72%</td></tr>
-      </tbody>
-    </table>
-  </div>
+<section id="sec-results"><div class="container-w">
+  <div class="fu"><div class="slabel">Results</div><h2>Comparison with State-of-the-Art</h2></div>
+  <div class="twrap fu"><table>
+    <thead><tr><th>Method</th><th>Type</th><th>MA-52 Top-1</th><th>MA-52 F1<sub>mean</sub></th><th>iMiGUE Top-1</th><th>iMiGUE Top-5</th></tr></thead>
+    <tbody>
+      <tr><td>TSM <span class="mtag tc">CNN</span></td><td>RGB</td><td>56.75%</td><td>61.39</td><td>61.10%</td><td>91.24%</td></tr>
+      <tr><td>MANet <span class="mtag tc">CNN</span></td><td>RGB+Pose</td><td>61.33%</td><td>65.59</td><td>62.54%</td><td>92.18%</td></tr>
+      <tr><td>SlowFast <span class="mtag tc">3D</span></td><td>RGB</td><td>59.60%</td><td>63.09</td><td>58.73%</td><td>89.41%</td></tr>
+      <tr><td>UniFormer <span class="mtag tt">Trans</span></td><td>RGB</td><td>58.89%</td><td>64.43</td><td>57.29%</td><td>89.95%</td></tr>
+      <tr><td>CTR-GCN <span class="mtag tg">GCN</span></td><td>Skeleton</td><td>52.61%</td><td>56.48</td><td>52.94%</td><td>89.76%</td></tr>
+      <tr><td>PoseConv3D <span class="mtag tg">GCN</span></td><td>Skeleton</td><td>63.52%</td><td>66.66</td><td>64.38%</td><td>93.52%</td></tr>
+      <tr><td>PCAN <span class="mtag tc">CNN</span></td><td>RGB+Pose</td><td>66.74%</td><td>69.97</td><td>&ndash;</td><td>&ndash;</td></tr>
+      <tr class="ours"><td>Micro-DualNet (Ours)</td><td>RGB+Pose</td><td class="best">65.10%</td><td class="best">68.72</td><td class="best">76.88%</td><td class="best">96.72%</td></tr>
+    </tbody>
+  </table></div>
   <div class="abgrid fu">
     <div class="abblk"><h4>Component Ablation &mdash; MA-52 Top-1 (%)</h4>
       <div class="abr"><span class="abl">TSM baseline</span><div class="abt"><div class="abf bb" style="width:80.1%">52.15</div></div></div>
@@ -497,40 +428,28 @@
       <div class="abr"><span class="abl">+ MAC Loss</span><div class="abt"><div class="abf bc" style="width:98.2%">75.52</div></div></div>
       <div class="abr"><span class="abl" style="font-weight:700">Full Model</span><div class="abt"><div class="abf bf" style="width:100%">76.88</div></div></div>
     </div>
-  </div></div>
-</section>
+  </div>
+</div></section>
 
 <!-- QUALITATIVE -->
-<section id="sec-qual">
-  <div class="container-w"><div class="fu"><div class="slabel">Qualitative Results</div><h2>Visualization &amp; Analysis</h2></div>
-  <div class="figure fu">
-    <div class="fig-ph"><div class="phi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="7" r="2"/><circle cx="19" cy="8" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="17" r="2.5"/></svg></div><span class="phl">t-SNE Visualizations (Fig. 4)</span><span class="phf">assets/tsne_visualization.png</span></div>
-    <div class="figcap"><strong>Figure 4.</strong> Progressive improvement in class clustering from baseline to Micro-DualNet.</div>
-  </div>
-  <div class="figure fu">
-    <div class="fig-ph"><div class="phi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><span class="phl">Class-wise Performance (Fig. 5)</span><span class="phf">assets/classwise_analysis.png</span></div>
-    <div class="figcap"><strong>Figure 5.</strong> Dual-path achieves +31% on hard categories.</div>
-  </div></div>
-</section>
+<section id="sec-qual"><div class="container-w">
+  <div class="fu"><div class="slabel">Qualitative Results</div><h2>Visualization &amp; Analysis</h2></div>
+  <div class="figure fu"><div class="fig-ph"><div class="phi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="7" r="2"/><circle cx="19" cy="8" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="17" r="2.5"/></svg></div><span class="phl">t-SNE Visualizations (Fig. 4)</span><span class="phf">assets/tsne_visualization.png</span></div><div class="figcap"><strong>Figure 4.</strong> Progressive improvement in class clustering from baseline to Micro-DualNet.</div></div>
+  <div class="figure fu"><div class="fig-ph"><div class="phi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><span class="phl">Class-wise Performance (Fig. 5)</span><span class="phf">assets/classwise_analysis.png</span></div><div class="figcap"><strong>Figure 5.</strong> Dual-path achieves +31% on hard categories.</div></div>
+</div></section>
 
 <!-- CLINICAL -->
-<section id="sec-clinical">
-  <div class="container"><div class="fu">
-    <div class="slabel">Clinical Validation</div><h2>Behavioral Differences Across Diagnostic Groups</h2>
-    <div class="ccall"><h4>Bridging Benchmarks and Clinical Utility</h4><p>Applied to 290 individuals (ages 5&ndash;52) across ASD, PSY, and TDC groups, Micro-DualNet-detected micro-actions reveal statistically significant differences &mdash; including elevated "retracting feet" in PSY (p &lt; 0.001 vs ASD) and differential "leg shaking" in ASD (p = 0.002 vs PSY).</p></div>
+<section id="sec-clinical"><div class="container">
+  <div class="fu"><div class="slabel">Clinical Validation</div><h2>Behavioral Differences Across Diagnostic Groups</h2>
+    <div class="ccall"><h4>Bridging Benchmarks and Clinical Utility</h4><p>Applied to 290 individuals (ages 5&ndash;52) across ASD, PSY, and TDC groups, Micro-DualNet-detected micro-actions reveal statistically significant differences &mdash; elevated "retracting feet" in PSY (p &lt; 0.001 vs ASD) and differential "leg shaking" in ASD (p = 0.002 vs PSY).</p></div>
   </div>
-  <div class="figure fu">
-    <div class="fig-ph" style="min-height:280px"><div class="phi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><span class="phl">Clinical Violin Plots (Fig. 3)</span><span class="phf">assets/clinical_violin.png</span></div>
-    <div class="figcap"><strong>Figure 3.</strong> Violin plots of micro-action engagement by diagnostic group.</div>
-  </div></div>
-</section>
+  <div class="figure fu"><div class="fig-ph" style="min-height:280px"><div class="phi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><span class="phl">Clinical Violin Plots (Fig. 3)</span><span class="phf">assets/clinical_violin.png</span></div><div class="figcap"><strong>Figure 3.</strong> Violin plots of micro-action engagement by diagnostic group.</div></div>
+</div></section>
 
 <!-- CITATION -->
-<section id="sec-cite">
-  <div class="container"><div class="fu">
-    <div class="slabel">Citation</div><h2>BibTeX</h2>
-    <div class="bib"><button class="cbtn" onclick="copyBib()">Copy</button>
-      <pre><code>@inproceedings{chappa2026microdualnet,
+<section id="sec-cite"><div class="container"><div class="fu">
+  <div class="slabel">Citation</div><h2>BibTeX</h2>
+  <div class="bib"><button class="cbtn" onclick="copyBib()">Copy</button><pre><code>@inproceedings{chappa2026microdualnet,
   title     = {Micro-DualNet: Dual-Path Spatio-Temporal Network 
                for Micro-Action Recognition},
   author    = {Chappa, Naga VS Raviteja and Sariyanidi, Evangelos 
@@ -540,72 +459,71 @@
   booktitle = {International Conference on Automatic Face and 
                Gesture Recognition (FG)},
   year      = {2026}
-}</code></pre>
-    </div>
-  </div></div>
-</section>
+}</code></pre></div>
+</div></div></section>
 
-<!-- ACK -->
-<section>
-  <div class="container"><div class="fu">
-    <div class="slabel">Acknowledgements</div>
-    <p style="font-size:14px;color:var(--text2)">Supported by OD, NICHD, and NIMH grants R01MH122599, R01MH118327, P50HD105354, R21HD102078; and the IDDRC at CHOP/Penn.</p>
-  </div></div>
-</section>
+<section><div class="container"><div class="fu">
+  <div class="slabel">Acknowledgements</div>
+  <p style="font-size:14px;color:var(--text2)">Supported by OD, NICHD, and NIMH grants R01MH122599, R01MH118327, P50HD105354, R21HD102078; and the IDDRC at CHOP/Penn.</p>
+</div></div></section>
 
-<footer><p>Micro-DualNet &middot; <a href="#">Center for Autism Research</a>, Children's Hospital of Philadelphia</p></footer>
+<footer><p>Micro-DualNet &middot; <a href="https://www.research.chop.edu/center-for-autism-research">Center for Autism Research</a>, Children's Hospital of Philadelphia</p></footer>
 
 <script>
 (function(){
-  /* ── Data ── */
-  // Prediction scores: [dual, st, ts] for top-3 classes per scenario
-  var SC = {
-    cover_face: {
-      dom: ['face','lhand','rhand'],
-      routing: {head:[72,28],face:[85,15],lhand:[78,22],rhand:[80,20],torso:[60,40],lower:[45,55]},
-      preds: {
-        dual: [['Covering Face',94],['Touching Face',4],['Rubbing Eyes',1]],
-        st:   [['Covering Face',88],['Touching Face',7],['Arms Crossing',3]],
-        ts:   [['Covering Face',61],['Rubbing Eyes',18],['Touching Face',12]]
+  // Theme toggle
+  var html=document.documentElement;
+  var themeBtn=document.getElementById('themeBtn');
+  var saved=localStorage.getItem('theme');
+  if(saved)html.setAttribute('data-theme',saved);
+  themeBtn.addEventListener('click',function(){
+    var cur=html.getAttribute('data-theme');
+    var next=cur==='dark'?'light':'dark';
+    html.setAttribute('data-theme',next);
+    localStorage.setItem('theme',next);
+  });
+
+  // Viz data
+  var SC={
+    cover_face:{
+      dom:['face','lhand','rhand'],
+      routing:{head:[72,28],face:[85,15],lhand:[78,22],rhand:[80,20],torso:[60,40],lower:[45,55]},
+      preds:{
+        dual:[['Covering Face',94],['Touching Face',4],['Rubbing Eyes',1]],
+        st:[['Covering Face',88],['Touching Face',7],['Arms Crossing',3]],
+        ts:[['Covering Face',61],['Rubbing Eyes',18],['Touching Face',12]]
       },
-      ann: '<strong>Covering Face</strong> is position-defined. Dual path: <strong style="color:#6EE7B7">94%</strong>. ST-only captures most of it (88%) since spatial config matters, but TS-only drops to 61% &mdash; missing the pose information.'
+      ann:'<strong>Covering Face</strong> is position-defined. Dual: <strong style="color:#6EE7B7">94%</strong>. ST-only captures most (88%) since spatial config matters most, but TS-only drops to 61%.'
     },
-    leg_shake: {
-      dom: ['lower'],
-      routing: {head:[55,45],face:[50,50],lhand:[48,52],rhand:[48,52],torso:[40,60],lower:[15,85]},
-      preds: {
-        dual: [['Leg Shaking',92],['Retracting Feet',5],['Stretching Feet',2]],
-        st:   [['Leg Shaking',58],['Retracting Feet',22],['Stretching Feet',14]],
-        ts:   [['Leg Shaking',85],['Retracting Feet',8],['Stretching Feet',4]]
+    leg_shake:{
+      dom:['lower'],
+      routing:{head:[55,45],face:[50,50],lhand:[48,52],rhand:[48,52],torso:[40,60],lower:[15,85]},
+      preds:{
+        dual:[['Leg Shaking',92],['Retracting Feet',5],['Stretching Feet',2]],
+        st:[['Leg Shaking',58],['Retracting Feet',22],['Stretching Feet',14]],
+        ts:[['Leg Shaking',85],['Retracting Feet',8],['Stretching Feet',4]]
       },
-      ann: '<strong>Leg Shaking</strong> is motion-defined. Dual path: <strong style="color:#6EE7B7">92%</strong>. TS-only captures the rhythm well (85%), but ST-only drops to 58% &mdash; temporal patterns are essential here.'
+      ann:'<strong>Leg Shaking</strong> is motion-defined. Dual: <strong style="color:#6EE7B7">92%</strong>. TS-only captures the rhythm well (85%), but ST-only drops to 58%.'
     },
-    rub_hands: {
-      dom: ['lhand','rhand'],
-      routing: {head:[52,48],face:[50,50],lhand:[35,65],rhand:[35,65],torso:[58,42],lower:[50,50]},
-      preds: {
-        dual: [['Rubbing Hands',91],['Touching Face',5],['Arms Crossing',2]],
-        st:   [['Rubbing Hands',72],['Arms Crossing',12],['Touching Face',9]],
-        ts:   [['Rubbing Hands',78],['Touching Face',10],['Hands Together',7]]
+    rub_hands:{
+      dom:['lhand','rhand'],
+      routing:{head:[52,48],face:[50,50],lhand:[35,65],rhand:[35,65],torso:[58,42],lower:[50,50]},
+      preds:{
+        dual:[['Rubbing Hands',91],['Touching Face',5],['Arms Crossing',2]],
+        st:[['Rubbing Hands',72],['Arms Crossing',12],['Touching Face',9]],
+        ts:[['Rubbing Hands',78],['Touching Face',10],['Hands Together',7]]
       },
-      ann: '<strong>Rubbing Hands</strong> needs both spatial contact and temporal repetition. Dual path: <strong style="color:#6EE7B7">91%</strong>. Neither single path alone captures it &mdash; ST gets 72%, TS gets 78%, confirming both paths contribute.'
+      ann:'<strong>Rubbing Hands</strong> needs both spatial contact and temporal repetition. Dual: <strong style="color:#6EE7B7">91%</strong>. Neither single path alone captures it &mdash; ST 72%, TS 78%.'
     }
   };
+  var ENTS=[{k:'head',e:'\u{1F9E0}'},{k:'face',e:'\u{1F636}'},{k:'lhand',e:'\u{1F91A}'},{k:'rhand',e:'\u{270B}'},{k:'torso',e:'\u{1F464}'},{k:'lower',e:'\u{1F9B5}'}];
+  var sc='cover_face',vw='dual',tmr=null;
+  var rrow=document.getElementById('rrow'),predBox=document.getElementById('predScores'),vizAnn=document.getElementById('vizAnn'),stCol=document.getElementById('stCol'),tsCol=document.getElementById('tsCol');
 
-  var ENTS = [{k:'head',e:'\u{1F9E0}'},{k:'face',e:'\u{1F636}'},{k:'lhand',e:'\u{1F91A}'},{k:'rhand',e:'\u{270B}'},{k:'torso',e:'\u{1F464}'},{k:'lower',e:'\u{1F9B5}'}];
-  var sc='cover_face', vw='dual', tmr=null;
-
-  var rrow=document.getElementById('rrow');
-  var predBox=document.getElementById('predScores');
-  var vizAnn=document.getElementById('vizAnn');
-  var stCol=document.getElementById('stCol');
-  var tsCol=document.getElementById('tsCol');
-
-  // Build step dots
+  // Step dots
   var vsteps=document.getElementById('vsteps');
   for(var i=0;i<5;i++){var d=document.createElement('div');d.className='vdot';d.dataset.s=i;vsteps.appendChild(d);}
 
-  // Build routing chips
   function buildChips(){
     rrow.innerHTML='';
     ENTS.forEach(function(e){
@@ -614,22 +532,16 @@
       rrow.appendChild(c);
     });
   }
-
-  // Build prediction display
   function buildPreds(){
     var data=SC[sc].preds[vw];
-    var html='<div class="ps-title">Prediction Confidence</div>';
-    data.forEach(function(p,i){
-      html+='<div class="ps-row'+(i===0?' top':'')+'"><span class="ps-label">'+p[0]+'</span><div class="ps-bar-track"><div class="ps-bar-fill" style="width:'+p[1]+'%"></div></div><span class="ps-pct">'+p[1]+'%</span></div>';
-    });
-    predBox.innerHTML=html;
+    var h='<div class="pst">Prediction Confidence</div>';
+    data.forEach(function(p,i){h+='<div class="psr'+(i===0?' top':'')+'"><span class="psl">'+p[0]+'</span><div class="psbt"><div class="psbf" style="width:'+p[1]+'%"></div></div><span class="pspc">'+p[1]+'%</span></div>';});
+    predBox.innerHTML=h;
   }
-
   function updateRouting(){
     var data=SC[sc];
     ENTS.forEach(function(e){
-      var chip=rrow.querySelector('[data-e="'+e.k+'"]');
-      if(!chip)return;
+      var chip=rrow.querySelector('[data-e="'+e.k+'"]');if(!chip)return;
       var r=data.routing[e.k];
       chip.querySelector('.rs').style.width=r[0]+'%';
       chip.querySelector('.rt').style.width=r[1]+'%';
@@ -638,128 +550,63 @@
     });
     document.querySelectorAll('.etok').forEach(function(t){t.classList.remove('dom')});
     data.dom.forEach(function(k){var t=document.querySelector('.etok.'+k);if(t)t.classList.add('dom');});
-    buildPreds();
-    vizAnn.innerHTML=SC[sc].ann;
+    buildPreds();vizAnn.innerHTML=SC[sc].ann;
   }
-
-  function updateView(){
-    stCol.style.display=(vw==='ts')?'none':'';
-    tsCol.style.display=(vw==='st')?'none':'';
-  }
-
-  // Mini-animation triggers
-  function triggerMinis(ids,cls){
-    ids.forEach(function(id){
-      var el=document.getElementById(id);
-      if(!el)return;
-      el.classList.add('show');
-      var svg=el.querySelector('svg');
-      svg.classList.remove('anim');
-      void svg.offsetWidth; // reflow
-      svg.classList.add('anim');
-    });
-  }
-
-  function clearMinis(){
-    document.querySelectorAll('.proc-mini').forEach(function(m){m.classList.remove('show');m.querySelector('svg').classList.remove('anim');});
-  }
+  function updateView(){stCol.style.display=(vw==='ts')?'none':'';tsCol.style.display=(vw==='st')?'none':'';}
+  function trigMini(ids){ids.forEach(function(id){var el=document.getElementById(id);if(!el)return;el.classList.add('show');var s=el.querySelector('svg');s.classList.remove('anim');void s.offsetWidth;s.classList.add('anim');});}
+  function clearMini(){document.querySelectorAll('.proc-mini').forEach(function(m){m.classList.remove('show');m.querySelector('svg').classList.remove('anim');});}
 
   function run(){
     if(tmr)clearTimeout(tmr);
-    // Reset
     document.querySelectorAll('.pr,.pa,.psplit').forEach(function(e){e.classList.remove('v')});
     document.querySelectorAll('.vdot').forEach(function(d){d.classList.remove('on','dn')});
     document.querySelectorAll('.pb').forEach(function(b){b.classList.remove('pB','pR')});
     document.querySelectorAll('.etok').forEach(function(t){t.classList.remove('dom')});
-    clearMinis();
-
+    clearMini();
     var steps=[0,1,2,3,4],idx=0;
     function go(){
-      if(idx>=steps.length)return;
-      var s=steps[idx];
-      // Dots
+      if(idx>=steps.length)return;var s=steps[idx];
       document.querySelectorAll('.vdot').forEach(function(d,i){
         if(i<s){d.classList.add('dn');d.classList.remove('on');}
         else if(i===s){d.classList.add('on');d.classList.remove('dn');}
         else{d.classList.remove('on','dn');}
       });
-      // Show
       document.querySelectorAll('[data-s="'+s+'"]').forEach(function(e){e.classList.add('v')});
-
       if(s===2){
-        // Phase 1: first transformer in each path
         setTimeout(function(){
-          if(vw!=='ts'){document.getElementById('st1').classList.add('pB');triggerMinis(['miniSp1'],'anim');}
-          if(vw!=='st'){document.getElementById('ts1').classList.add('pR');triggerMinis(['miniTp2'],'anim');}
-          // Phase 2: second transformer
+          if(vw!=='ts'){document.getElementById('st1').classList.add('pB');trigMini(['mSp1']);}
+          if(vw!=='st'){document.getElementById('ts1').classList.add('pR');trigMini(['mTp2']);}
           setTimeout(function(){
-            document.querySelectorAll('.pb').forEach(function(b){b.classList.remove('pB','pR')});
-            clearMinis();
-            if(vw!=='ts'){document.getElementById('st2').classList.add('pR');triggerMinis(['miniTp1'],'anim');}
-            if(vw!=='st'){document.getElementById('ts2').classList.add('pB');triggerMinis(['miniSp2'],'anim');}
-            setTimeout(function(){
-              document.querySelectorAll('.pb').forEach(function(b){b.classList.remove('pB','pR')});
-              clearMinis();
-            },900);
+            document.querySelectorAll('.pb').forEach(function(b){b.classList.remove('pB','pR')});clearMini();
+            if(vw!=='ts'){document.getElementById('st2').classList.add('pR');trigMini(['mTp1']);}
+            if(vw!=='st'){document.getElementById('ts2').classList.add('pB');trigMini(['mSp2']);}
+            setTimeout(function(){document.querySelectorAll('.pb').forEach(function(b){b.classList.remove('pB','pR')});clearMini();},900);
           },1000);
         },300);
       }
       if(s===3)setTimeout(updateRouting,200);
       if(s===4)setTimeout(buildPreds,100);
-
-      idx++;
-      if(idx<steps.length)tmr=setTimeout(go,s===2?2600:600);
+      idx++;if(idx<steps.length)tmr=setTimeout(go,s===2?2600:600);
     }
     go();
   }
 
-  // Events
-  document.querySelectorAll('.scbtn').forEach(function(b){
-    b.addEventListener('click',function(){
-      document.querySelectorAll('.scbtn').forEach(function(x){x.classList.remove('on')});
-      b.classList.add('on');sc=b.dataset.sc;run();
-    });
-  });
-  document.querySelectorAll('.vtab').forEach(function(t){
-    t.addEventListener('click',function(){
-      document.querySelectorAll('.vtab').forEach(function(x){x.classList.remove('ast','ats','adu')});
-      vw=t.dataset.vw;
-      t.classList.add(vw==='st'?'ast':vw==='ts'?'ats':'adu');
-      updateView();run();
-    });
-  });
+  document.querySelectorAll('.scbtn').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.scbtn').forEach(function(x){x.classList.remove('on')});b.classList.add('on');sc=b.dataset.sc;run();});});
+  document.querySelectorAll('.vtab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.vtab').forEach(function(x){x.classList.remove('ast','ats','adu')});vw=t.dataset.vw;t.classList.add(vw==='st'?'ast':vw==='ts'?'ats':'adu');updateView();run();});});
   document.getElementById('playBtn').addEventListener('click',run);
-
   buildChips();updateView();
 
-  // Auto-play on scroll
   var vo=new IntersectionObserver(function(e){if(e[0].isIntersecting){setTimeout(run,300);vo.disconnect();}},{threshold:.3});
   vo.observe(document.getElementById('vizWrap'));
-
-  // Fade-up
   var fo=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('vi');});},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
   document.querySelectorAll('.fu').forEach(function(el){fo.observe(el);});
 
-  // Sticky nav active state
-  var navLinks=document.querySelectorAll('.nav a');
-  var sections=[];
-  navLinks.forEach(function(a){var t=document.querySelector(a.getAttribute('href'));if(t)sections.push({el:t,link:a});});
-  window.addEventListener('scroll',function(){
-    var y=window.scrollY+80;
-    var cur=null;
-    sections.forEach(function(s){if(s.el.offsetTop<=y)cur=s;});
-    navLinks.forEach(function(a){a.classList.remove('active')});
-    if(cur)cur.link.classList.add('active');
-  },{passive:true});
+  // Nav active
+  var navLinks=document.querySelectorAll('.nav a');var secs=[];
+  navLinks.forEach(function(a){var t=document.querySelector(a.getAttribute('href'));if(t)secs.push({el:t,link:a});});
+  window.addEventListener('scroll',function(){var y=window.scrollY+80;var cur=null;secs.forEach(function(s){if(s.el.offsetTop<=y)cur=s;});navLinks.forEach(function(a){a.classList.remove('active')});if(cur)cur.link.classList.add('active');},{passive:true});
 })();
-
-function copyBib(){
-  var c=document.querySelector('.bib code').textContent;
-  navigator.clipboard.writeText(c).then(function(){
-    var b=document.querySelector('.cbtn');b.textContent='Copied!';
-    setTimeout(function(){b.textContent='Copy';},2000);
-  });
-}
+function copyBib(){var c=document.querySelector('.bib code').textContent;navigator.clipboard.writeText(c).then(function(){var b=document.querySelector('.cbtn');b.textContent='Copied!';setTimeout(function(){b.textContent='Copy';},2000);});}
 </script>
 </body>
 </html>
