@@ -132,6 +132,23 @@
     .btn-p:hover{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
     .btn svg{width:18px;height:18px;flex-shrink:0}
 
+    .award-block{
+      display:inline-flex;align-items:center;gap:14px;
+      padding:10px 18px 10px 12px;border-radius:100px;
+      background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(245,158,11,.08));
+      border:1.5px solid rgba(251,191,36,.35);
+      margin-bottom:28px;position:relative;
+      box-shadow:0 4px 16px rgba(251,191,36,.15);
+    }
+    .award-img{width:44px;height:44px;border-radius:50%;object-fit:cover;
+      border:2px solid rgba(251,191,36,.5);background:#fff;flex-shrink:0}
+    .award-text{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2}
+    .award-title{font-family:'Space Grotesk',var(--sans);font-size:15px;font-weight:700;
+      color:#D97706;letter-spacing:-.01em}
+    [data-theme="dark"] .award-title{color:#FBBF24}
+    .award-venue{font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+      text-transform:uppercase;color:var(--text3);margin-top:2px}
+
     /* THEME TOGGLE */
     .theme-toggle{position:fixed;top:16px;right:16px;z-index:200;width:40px;height:40px;border-radius:10px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.15)}
     .theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
@@ -354,7 +371,13 @@
 
 <!-- HERO -->
 <header class="hero">
-  <div class="venue">ACCEPTED TO IEEE FG 2026</div>
+  <div class="award-block">
+    <img src="assets/fg_award.jpeg" alt="IEEE FG 2026 Best Paper Award" class="award-img">
+    <div class="award-text">
+      <div class="award-title">Best Paper Award</div>
+      <div class="award-venue">IEEE FG 2026</div>
+    </div>
+  </div>
   <h1><span class="hl">Micro-DualNet:</span> Dual-Path Spatio-Temporal Network for Micro-Action Recognition</h1>
   <div class="authors">
     <a href="https://nchappa.github.io" target="_blank" rel="noopener">Naga VS Raviteja Chappa</a><sup>1</sup>,
